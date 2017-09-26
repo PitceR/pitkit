@@ -1,6 +1,7 @@
 package pl.pitkour.pitkit.utility;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -16,12 +17,14 @@ public final class TimeUtility
 	public static String getDate(long millis)
 	{
 		Instant instant = Instant.ofEpochMilli(millis);
-		return DATE_FORMATTER.format(instant);
+		LocalDateTime time = LocalDateTime.ofInstant(instant, TIME_ZONE);
+		return time.format(DATE_FORMATTER);
 	}
 
 	public static String getTime(long millis)
 	{
 		Instant instant = Instant.ofEpochMilli(millis);
-		return TIME_FORMATTER.format(instant);
+		LocalDateTime time = LocalDateTime.ofInstant(instant, TIME_ZONE);
+		return time.format(TIME_FORMATTER);
 	}
 }
