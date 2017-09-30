@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import com.github.pitcer.shorts.Conditions;
 import com.github.pitcer.shorts.Loops;
 import org.bukkit.DyeColor;
@@ -35,6 +36,7 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 	private List<Text> description = new ArrayList<>();
 	private Map<Enchantment, Integer> enchantments = new TreeMap<>();
 	private Set<ItemFlag> flags = EnumSet.noneOf(ItemFlag.class);
+	private Consumer<ItemMeta> metadataApplier;
 
 	public Item()
 	{}
@@ -120,6 +122,7 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 	{
 		ItemStack item = new ItemStack(this.id, this.amount, this.damage, this.data);
 		ItemMeta metadata = item.getItemMeta();
+		Conditions.ifThen(this.metadataApplier != null, () -> this.metadataApplier.accept(metadata));
 		metadata.setUnbreakable(this.unbreakable);
 		if(this.glow)
 		{
@@ -310,6 +313,11 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 		this.flags = flags;
 	}
 
+	public void setMetadataApplier(Consumer<ItemMeta> metadataApplier)
+	{
+		this.metadataApplier = metadataApplier;
+	}
+
 	public static final class ItemBuilder implements Builder<Item>
 	{
 		private Item item;
@@ -421,6 +429,12 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 		public ItemBuilder flags(ItemFlag... flags)
 		{
 			this.item.addFlags(flags);
+			return this;
+		}
+
+		public ItemBuilder metadata(Consumer<ItemMeta> metadataApplier)
+		{
+			this.item.setMetadataApplier(metadataApplier);
 			return this;
 		}
 
