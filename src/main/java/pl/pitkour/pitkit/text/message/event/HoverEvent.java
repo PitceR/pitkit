@@ -16,6 +16,7 @@
 package pl.pitkour.pitkit.text.message.event;
 
 import java.io.Serializable;
+import java.util.Objects;
 import pl.pitkour.pitkit.text.Text;
 import pl.pitkour.pitkit.text.message.event.action.HoverAction;
 
@@ -33,6 +34,33 @@ public final class HoverEvent implements Serializable
 	{
 		this.action = action;
 		this.value = text;
+	}
+
+	@Override
+	public boolean equals(Object object)
+	{
+		if(this == object)
+		{
+			return true;
+		}
+		if(object == null || getClass() != object.getClass())
+		{
+			return false;
+		}
+		HoverEvent that = (HoverEvent)object;
+		return this.action == that.action && this.value.equals(that.value);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(this.action, this.value);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "HoverEvent{" + "action=" + this.action + ", value=" + this.value + '}';
 	}
 
 	public HoverAction getAction()

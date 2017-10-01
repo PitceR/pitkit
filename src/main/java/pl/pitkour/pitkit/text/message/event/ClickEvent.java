@@ -16,6 +16,7 @@
 package pl.pitkour.pitkit.text.message.event;
 
 import java.io.Serializable;
+import java.util.Objects;
 import pl.pitkour.pitkit.text.Text;
 import pl.pitkour.pitkit.text.message.event.action.ClickAction;
 
@@ -33,6 +34,33 @@ public final class ClickEvent implements Serializable
 	{
 		this.action = action;
 		this.value = text;
+	}
+
+	@Override
+	public boolean equals(Object object)
+	{
+		if(this == object)
+		{
+			return true;
+		}
+		if(object == null || getClass() != object.getClass())
+		{
+			return false;
+		}
+		ClickEvent that = (ClickEvent)object;
+		return this.action == that.action && this.value.equals(that.value);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(this.action, this.value);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "ClickEvent{" + "action=" + this.action + ", value=" + this.value + '}';
 	}
 
 	public ClickAction getAction()

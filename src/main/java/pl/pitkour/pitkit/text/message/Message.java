@@ -295,7 +295,7 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 		return this.currentPart;
 	}
 
-	public final class MessagePart
+	public final class MessagePart implements Serializable
 	{
 		private Text text;
 		private ChatColor color;
@@ -357,6 +357,33 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 				jsonObject.add("clickEvent", jsonClickEvent);
 			}
 			return jsonObject;
+		}
+
+		@Override
+		public boolean equals(Object object)
+		{
+			if(this == object)
+			{
+				return true;
+			}
+			if(object == null || getClass() != object.getClass())
+			{
+				return false;
+			}
+			MessagePart that = (MessagePart)object;
+			return this.text.equals(that.text) && this.color == that.color && this.magicFormat == that.magicFormat && this.boldFormat == that.boldFormat && this.strikethroughFormat == that.strikethroughFormat && this.underlineFormat == that.underlineFormat && this.italicFormat == that.italicFormat && this.hoverEvent.equals(that.hoverEvent) && this.clickEvent.equals(that.clickEvent);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return Objects.hash(this.text, this.color, this.magicFormat, this.boldFormat, this.strikethroughFormat, this.underlineFormat, this.italicFormat, this.hoverEvent, this.clickEvent);
+		}
+
+		@Override
+		public String toString()
+		{
+			return "MessagePart{" + "text=" + this.text + ", color=" + this.color + ", magicFormat=" + this.magicFormat + ", boldFormat=" + this.boldFormat + ", strikethroughFormat=" + this.strikethroughFormat + ", underlineFormat=" + this.underlineFormat + ", italicFormat=" + this.italicFormat + ", hoverEvent=" + this.hoverEvent + ", clickEvent=" + this.clickEvent + '}';
 		}
 
 		public Text getText()
