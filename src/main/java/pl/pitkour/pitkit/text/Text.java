@@ -140,8 +140,8 @@ public final class Text implements Buildable<TextBuilder>, Serializable
 		{
 			return false;
 		}
-		Text text = (Text)object;
-		return this.colored == text.colored && this.uncolored == text.uncolored && this.text.toString().equals(text.text.toString());
+		Text that = (Text)object;
+		return this.colored == that.colored && this.uncolored == that.uncolored && this.text.toString().equals(that.text.toString());
 	}
 
 	@Override

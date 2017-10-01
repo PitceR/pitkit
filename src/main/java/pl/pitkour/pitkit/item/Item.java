@@ -163,8 +163,8 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 		{
 			return false;
 		}
-		Item item = (Item)object;
-		return this.id == item.id && this.amount == item.amount && this.damage == item.damage && this.data == item.data && this.unbreakable == item.unbreakable && this.glow == item.glow && this.name.equals(item.name) && this.description.equals(item.description) && this.enchantments.equals(item.enchantments) && this.flags.equals(item.flags);
+		Item that = (Item)object;
+		return this.id == that.id && this.amount == that.amount && this.damage == that.damage && this.data == that.data && this.unbreakable == that.unbreakable && this.glow == that.glow && this.name.equals(that.name) && this.description.equals(that.description) && this.enchantments.equals(that.enchantments) && this.flags.equals(that.flags);
 	}
 
 	@Override

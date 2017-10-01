@@ -169,8 +169,8 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 		{
 			return false;
 		}
-		Message message = (Message)object;
-		return this.parts.equals(message.parts);
+		Message that = (Message)object;
+		return this.parts.equals(that.parts);
 	}
 
 	@Override
