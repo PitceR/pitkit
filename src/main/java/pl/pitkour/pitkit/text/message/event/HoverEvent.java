@@ -25,9 +25,14 @@ public final class HoverEvent implements Serializable
 	private HoverAction action;
 	private Text value;
 
+	public HoverEvent(HoverEvent event)
+	{
+		this(event.action, Text.of(event.value));
+	}
+
 	public HoverEvent(HoverAction action, String value)
 	{
-		this(action, new Text(value));
+		this(action, Text.of(value));
 	}
 
 	public HoverEvent(HoverAction action, Text text)

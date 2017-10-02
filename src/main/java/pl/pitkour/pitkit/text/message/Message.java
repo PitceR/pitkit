@@ -17,6 +17,7 @@ package pl.pitkour.pitkit.text.message;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import com.github.pitcer.shorts.Conditions;
@@ -35,12 +36,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import pl.pitkour.pitkit.text.Text;
-import pl.pitkour.pitkit.text.message.Message.MessageBuilder;
 import pl.pitkour.pitkit.text.message.event.ClickEvent;
 import pl.pitkour.pitkit.text.message.event.HoverEvent;
 import pl.pitkour.pitkit.text.message.event.action.ClickAction;
 import pl.pitkour.pitkit.text.message.event.action.HoverAction;
-import pl.pitkour.pitkit.utility.Buildable;
 import pl.pitkour.pitkit.utility.Builder;
 import pl.pitkour.pitkit.utility.NumberUtility;
 import pl.pitkour.pitkit.utility.TimeUtility;
@@ -49,27 +48,33 @@ import static pl.pitkour.pitkit.text.Text.PREFIX;
 import static pl.pitkour.pitkit.text.Text.PREFIX_COLOR;
 import static pl.pitkour.pitkit.text.Text.REGULAR_COLOR;
 
-public final class Message implements Buildable<MessageBuilder>, Serializable
+public final class Message implements Serializable
 {
 	private List<MessagePart> parts = new ArrayList<>();
 	private transient MessagePart currentPart;
 
-	public Message()
+	private Message()
 	{
-		this(new Text());
+		this(Text.empty());
 	}
 
-	public Message(BaseComponent... baseComponents)
+	private Message(Message message)
+	{
+		this.parts = Loops.transform(message.parts, MessagePart::new);
+		this.currentPart = message.currentPart;
+	}
+
+	private Message(BaseComponent[] baseComponents)
 	{
 		Loops.forEach(baseComponents, this::addText);
 	}
 
-	public Message(String text)
+	private Message(String text)
 	{
 		addText(text);
 	}
 
-	public Message(Text text)
+	private Message(Text text)
 	{
 		addText(text);
 	}
@@ -77,6 +82,11 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 	public static Message empty()
 	{
 		return new Message();
+	}
+
+	public static Message of(Message message)
+	{
+		return new Message(message);
 	}
 
 	public static Message of(BaseComponent... baseComponents)
@@ -96,28 +106,27 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 
 	public static MessageBuilder builder()
 	{
-		return new MessageBuilder();
+		return new MessageBuilder(new Message());
+	}
+
+	public static MessageBuilder builder(Message message)
+	{
+		return new MessageBuilder(new Message(message));
 	}
 
 	public static MessageBuilder builder(BaseComponent... baseComponents)
 	{
-		return new MessageBuilder(baseComponents);
+		return new MessageBuilder(new Message(baseComponents));
 	}
 
 	public static MessageBuilder builder(String text)
 	{
-		return new MessageBuilder(text);
+		return new MessageBuilder(new Message(text));
 	}
 
 	public static MessageBuilder builder(Text text)
 	{
-		return new MessageBuilder(text);
-	}
-
-	@Override
-	public MessageBuilder toBuilder()
-	{
-		return new MessageBuilder(this);
+		return new MessageBuilder(new Message(text));
 	}
 
 	public void sendChat(Player receiver)
@@ -179,65 +188,65 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 		return Objects.hash(this.parts);
 	}
 
-	public void addDate(long millis)
+	private void addDate(long millis)
 	{
 		String date = TimeUtility.getDate(millis);
 		addHighlightedColored(date);
 	}
 
-	public void addTime(long millis)
+	private void addTime(long millis)
 	{
 		String time = TimeUtility.getTime(millis);
 		addHighlightedColored(time);
 	}
 
-	public void addNumber(long number)
+	private void addNumber(long number)
 	{
 		String separatedThousands = NumberUtility.separateThousands(number);
 		addHighlightedColored(separatedThousands);
 	}
 
-	public void addNumber(double floatingPointNumber)
+	private void addNumber(double floatingPointNumber)
 	{
 		String separatedThousands = NumberUtility.separateThousands(floatingPointNumber);
 		addHighlightedColored(separatedThousands);
 	}
 
-	public void addInBrackets(String text)
+	private void addInBrackets(String text)
 	{
 		addRegularColored("(");
 		addHighlightedColored(text);
 		addRegularColored(")");
 	}
 
-	public void addInBrackets(Text text)
+	private void addInBrackets(Text text)
 	{
 		addRegularColored("(");
 		addHighlightedColored(text);
 		addRegularColored(")");
 	}
 
-	public void addRegularColored(String text)
+	private void addRegularColored(String text)
 	{
 		addColored(text, REGULAR_COLOR);
 	}
 
-	public void addRegularColored(Text text)
+	private void addRegularColored(Text text)
 	{
 		addColored(text, REGULAR_COLOR);
 	}
 
-	public void addHighlightedColored(String text)
+	private void addHighlightedColored(String text)
 	{
 		addColored(text, HIGHLIGHTED_COLOR);
 	}
 
-	public void addHighlightedColored(Text text)
+	private void addHighlightedColored(Text text)
 	{
 		addColored(text, HIGHLIGHTED_COLOR);
 	}
 
-	public void addPrefix()
+	private void addPrefix()
 	{
 		addColored(PREFIX, PREFIX_COLOR);
 	}
@@ -245,36 +254,36 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 	private void addColored(String text, ChatColor color)
 	{
 		addText(text);
-		this.currentPart.setColor(color);
+		this.currentPart.color = color;
 	}
 
 	private void addColored(Text text, ChatColor color)
 	{
 		addText(text);
-		this.currentPart.setColor(color);
+		this.currentPart.color = color;
 	}
 
-	public void addLine()
+	private void addLine()
 	{
 		addText("\n");
 	}
 
-	public void addSpace()
+	private void addSpace()
 	{
 		addText(" ");
 	}
 
-	public void addText(BaseComponent text)
+	private void addText(BaseComponent text)
 	{
 		addPart(new MessagePart(text));
 	}
 
-	public void addText(String text)
+	private void addText(String text)
 	{
 		addPart(new MessagePart(text));
 	}
 
-	public void addText(Text text)
+	private void addText(Text text)
 	{
 		addPart(new MessagePart(text));
 	}
@@ -285,14 +294,9 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 		this.parts.add(part);
 	}
 
-	public int getPartsCount()
+	public List<MessagePart> getParts()
 	{
-		return this.parts.size();
-	}
-
-	public MessagePart getCurrentPart()
-	{
-		return this.currentPart;
+		return Collections.unmodifiableList(this.parts);
 	}
 
 	public final class MessagePart implements Serializable
@@ -307,9 +311,22 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 		private HoverEvent hoverEvent;
 		private ClickEvent clickEvent;
 
+		private MessagePart(MessagePart part)
+		{
+			this(Text.of(part.text));
+			this.color = part.color;
+			this.magicFormat = part.magicFormat;
+			this.boldFormat = part.boldFormat;
+			this.strikethroughFormat = part.strikethroughFormat;
+			this.underlineFormat = part.underlineFormat;
+			this.italicFormat = part.italicFormat;
+			Conditions.ifThen(part.hoverEvent != null, () -> this.hoverEvent = new HoverEvent(part.hoverEvent));
+			Conditions.ifThen(part.clickEvent != null, () -> this.clickEvent = new ClickEvent(part.clickEvent));
+		}
+
 		private MessagePart(BaseComponent baseComponent)
 		{
-			this(new Text(baseComponent.getInsertion()));
+			this(Text.of(baseComponent.getInsertion()));
 			setColor(baseComponent.getColor());
 			this.magicFormat = baseComponent.isObfuscated();
 			this.boldFormat = baseComponent.isBold();
@@ -317,14 +334,14 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 			this.underlineFormat = baseComponent.isUnderlined();
 			this.italicFormat = baseComponent.isItalic();
 			net.md_5.bungee.api.chat.HoverEvent hoverEvent = baseComponent.getHoverEvent();
-			this.hoverEvent = new HoverEvent(HoverAction.get(hoverEvent.getAction()), new Text(hoverEvent.getValue()));
+			this.hoverEvent = new HoverEvent(HoverAction.get(hoverEvent.getAction()), Text.of(hoverEvent.getValue()));
 			net.md_5.bungee.api.chat.ClickEvent clickEvent = baseComponent.getClickEvent();
-			this.clickEvent = new ClickEvent(ClickAction.get(clickEvent.getAction()), new Text(clickEvent.getValue()));
+			this.clickEvent = new ClickEvent(ClickAction.get(clickEvent.getAction()), Text.of(clickEvent.getValue()));
 		}
 
 		private MessagePart(String text)
 		{
-			this(new Text(text));
+			this(Text.of(text));
 		}
 
 		private MessagePart(Text text)
@@ -391,22 +408,17 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 			return this.text;
 		}
 
-		public void setText(Text text)
-		{
-			this.text = text;
-		}
-
 		public ChatColor getColor()
 		{
 			return this.color;
 		}
 
-		public void setColor(net.md_5.bungee.api.ChatColor color)
+		private void setColor(net.md_5.bungee.api.ChatColor color)
 		{
 			this.color = ChatColor.valueOf(color.name());
 		}
 
-		public void setColor(ChatColor color)
+		private void setColor(ChatColor color)
 		{
 			this.color = color;
 		}
@@ -416,19 +428,9 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 			return this.magicFormat;
 		}
 
-		public void setMagicFormat(boolean magicFormat)
-		{
-			this.magicFormat = magicFormat;
-		}
-
 		public boolean isBoldFormat()
 		{
 			return this.boldFormat;
-		}
-
-		public void setBoldFormat(boolean boldFormat)
-		{
-			this.boldFormat = boldFormat;
 		}
 
 		public boolean isStrikethroughFormat()
@@ -436,19 +438,9 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 			return this.strikethroughFormat;
 		}
 
-		public void setStrikethroughFormat(boolean strikethroughFormat)
-		{
-			this.strikethroughFormat = strikethroughFormat;
-		}
-
 		public boolean isUnderlineFormat()
 		{
 			return this.underlineFormat;
-		}
-
-		public void setUnderlineFormat(boolean underlineFormat)
-		{
-			this.underlineFormat = underlineFormat;
 		}
 
 		public boolean isItalicFormat()
@@ -456,27 +448,22 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 			return this.italicFormat;
 		}
 
-		public void setItalicFormat(boolean italicFormat)
-		{
-			this.italicFormat = italicFormat;
-		}
-
 		public HoverEvent getHoverEvent()
 		{
 			return this.hoverEvent;
 		}
 
-		public void setHoverEvent(HoverAction action, Text text)
+		private void setHoverEvent(HoverAction action, Text text)
 		{
 			this.hoverEvent = new HoverEvent(action, text);
 		}
 
-		public void setHoverEvent(HoverAction action, String value)
+		private void setHoverEvent(HoverAction action, String value)
 		{
 			this.hoverEvent = new HoverEvent(action, value);
 		}
 
-		public void setHoverEvent(HoverEvent hoverEvent)
+		private void setHoverEvent(HoverEvent hoverEvent)
 		{
 			this.hoverEvent = hoverEvent;
 		}
@@ -486,17 +473,17 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 			return this.clickEvent;
 		}
 
-		public void setClickEvent(ClickAction action, Text text)
+		private void setClickEvent(ClickAction action, Text text)
 		{
 			this.clickEvent = new ClickEvent(action, text);
 		}
 
-		public void setClickEvent(ClickAction action, String value)
+		private void setClickEvent(ClickAction action, String value)
 		{
 			this.clickEvent = new ClickEvent(action, value);
 		}
 
-		public void setClickEvent(ClickEvent clickEvent)
+		private void setClickEvent(ClickEvent clickEvent)
 		{
 			this.clickEvent = clickEvent;
 		}
@@ -505,26 +492,6 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 	public final static class MessageBuilder implements Builder<Message>
 	{
 		private Message message;
-
-		private MessageBuilder()
-		{
-			this(new Message());
-		}
-
-		private MessageBuilder(BaseComponent[] baseComponents)
-		{
-			this(new Message(baseComponents));
-		}
-
-		private MessageBuilder(String text)
-		{
-			this(new Message(text));
-		}
-
-		private MessageBuilder(Text text)
-		{
-			this(new Message(text));
-		}
 
 		private MessageBuilder(Message message)
 		{
@@ -629,79 +596,104 @@ public final class Message implements Buildable<MessageBuilder>, Serializable
 
 		public MessageBuilder color(net.md_5.bungee.api.ChatColor color)
 		{
-			this.message.getCurrentPart().setColor(color);
+			this.message.currentPart.setColor(color);
 			return this;
 		}
 
 		public MessageBuilder color(ChatColor color)
 		{
-			this.message.getCurrentPart().setColor(color);
+			this.message.currentPart.setColor(color);
 			return this;
 		}
 
 		public MessageBuilder magic()
 		{
-			this.message.getCurrentPart().setMagicFormat(true);
+			return magic(true);
+		}
+
+		public MessageBuilder magic(boolean magic)
+		{
+			this.message.currentPart.magicFormat = magic;
 			return this;
 		}
 
 		public MessageBuilder bold()
 		{
-			this.message.getCurrentPart().setBoldFormat(true);
+			return bold(true);
+		}
+
+		public MessageBuilder bold(boolean bold)
+		{
+			this.message.currentPart.boldFormat = bold;
 			return this;
 		}
 
 		public MessageBuilder strikethrough()
 		{
-			this.message.getCurrentPart().setStrikethroughFormat(true);
+			return strikethrough(true);
+		}
+
+		public MessageBuilder strikethrough(boolean strikethrough)
+		{
+			this.message.currentPart.strikethroughFormat = strikethrough;
 			return this;
 		}
 
 		public MessageBuilder underline()
 		{
-			this.message.getCurrentPart().setUnderlineFormat(true);
+			return underline(true);
+		}
+
+		public MessageBuilder underline(boolean underline)
+		{
+			this.message.currentPart.underlineFormat = underline;
 			return this;
 		}
 
 		public MessageBuilder italic()
 		{
-			this.message.getCurrentPart().setItalicFormat(true);
+			return italic(true);
+		}
+
+		public MessageBuilder italic(boolean italic)
+		{
+			this.message.currentPart.italicFormat = italic;
 			return this;
 		}
 
 		public MessageBuilder hover(HoverAction action, Text text)
 		{
-			this.message.getCurrentPart().setHoverEvent(action, text);
+			this.message.currentPart.setHoverEvent(action, text);
 			return this;
 		}
 
 		public MessageBuilder hover(HoverAction action, String value)
 		{
-			this.message.getCurrentPart().setHoverEvent(action, value);
+			this.message.currentPart.setHoverEvent(action, value);
 			return this;
 		}
 
 		public MessageBuilder hover(HoverEvent hoverEvent)
 		{
-			this.message.getCurrentPart().setHoverEvent(hoverEvent);
+			this.message.currentPart.setHoverEvent(hoverEvent);
 			return this;
 		}
 
 		public MessageBuilder click(ClickAction action, Text text)
 		{
-			this.message.getCurrentPart().setClickEvent(action, text);
+			this.message.currentPart.setClickEvent(action, text);
 			return this;
 		}
 
 		public MessageBuilder click(ClickAction action, String value)
 		{
-			this.message.getCurrentPart().setClickEvent(action, value);
+			this.message.currentPart.setClickEvent(action, value);
 			return this;
 		}
 
 		public MessageBuilder click(ClickEvent clickEvent)
 		{
-			this.message.getCurrentPart().setClickEvent(clickEvent);
+			this.message.currentPart.setClickEvent(clickEvent);
 			return this;
 		}
 

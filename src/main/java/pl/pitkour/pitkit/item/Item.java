@@ -34,12 +34,10 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
-import pl.pitkour.pitkit.item.Item.ItemBuilder;
 import pl.pitkour.pitkit.text.Text;
-import pl.pitkour.pitkit.utility.Buildable;
 import pl.pitkour.pitkit.utility.Builder;
 
-public final class Item implements Buildable<ItemBuilder>, Serializable
+public final class Item implements Serializable
 {
 	private int id;
 	private int amount = 1;
@@ -47,17 +45,32 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 	private byte data;
 	private boolean unbreakable;
 	private boolean glow;
-	private Text name;
+	private Text name = Text.of("Item");
 	private List<Text> description = new ArrayList<>();
 	private Map<Enchantment, Integer> enchantments = new TreeMap<>();
 	private Set<ItemFlag> flags = EnumSet.noneOf(ItemFlag.class);
 	private Consumer<ItemMeta> metadataApplier;
 
-	public Item()
+	private Item()
 	{}
 
+	private Item(Item item)
+	{
+		this(item.id);
+		this.amount = item.amount;
+		this.damage = item.damage;
+		this.data = item.data;
+		this.unbreakable = item.unbreakable;
+		this.glow = item.glow;
+		this.name = Text.of(item.name);
+		this.description = Loops.transform(item.description, Text::of);
+		this.enchantments = new TreeMap<>(item.enchantments);
+		this.flags = EnumSet.copyOf(item.flags);
+		this.metadataApplier = item.metadataApplier;
+	}
+
 	@SuppressWarnings("deprecation")
-	public Item(ItemStack itemStack)
+	private Item(ItemStack itemStack)
 	{
 		this(itemStack.getTypeId());
 		this.amount = itemStack.getAmount();
@@ -68,20 +81,20 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 			ItemMeta metadata = itemStack.getItemMeta();
 			this.unbreakable = metadata.isUnbreakable();
 			Conditions.ifThen(metadata.hasItemFlag(ItemFlag.HIDE_ENCHANTS) && metadata.hasEnchant(Enchantment.LUCK), () -> this.glow = true);
-			Conditions.ifThen(metadata.hasDisplayName(), () -> this.name = new Text(metadata.getDisplayName()));
-			Conditions.ifThen(metadata.hasLore(), () -> this.description = Loops.transform(metadata.getLore(), Text::new));
+			Conditions.ifThen(metadata.hasDisplayName(), () -> this.name = Text.of(metadata.getDisplayName()));
+			Conditions.ifThen(metadata.hasLore(), () -> this.description = Loops.transform(metadata.getLore(), Text::of));
 			Conditions.ifThen(metadata.hasEnchants(), () -> this.enchantments = new TreeMap<>(metadata.getEnchants()));
 			this.flags = metadata.getItemFlags();
 		}
 	}
 
 	@SuppressWarnings("deprecation")
-	public Item(Material material)
+	private Item(Material material)
 	{
 		this(material.getId());
 	}
 
-	public Item(int id)
+	private Item(int id)
 	{
 		this.id = id;
 	}
@@ -89,6 +102,11 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 	public static Item empty()
 	{
 		return new Item();
+	}
+
+	public static Item of(Item item)
+	{
+		return new Item(item);
 	}
 
 	public static Item of(ItemStack itemStack)
@@ -108,28 +126,27 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 
 	public static ItemBuilder builder()
 	{
-		return new ItemBuilder();
+		return new ItemBuilder(new Item());
+	}
+
+	public static ItemBuilder builder(Item item)
+	{
+		return new ItemBuilder(new Item(item));
 	}
 
 	public static ItemBuilder builder(ItemStack itemStack)
 	{
-		return new ItemBuilder(itemStack);
+		return new ItemBuilder(new Item(itemStack));
 	}
 
 	public static ItemBuilder builder(Material material)
 	{
-		return new ItemBuilder(material);
+		return new ItemBuilder(new Item(material));
 	}
 
 	public static ItemBuilder builder(int id)
 	{
-		return new ItemBuilder(id);
-	}
-
-	@Override
-	public ItemBuilder toBuilder()
-	{
-		return new ItemBuilder(this);
+		return new ItemBuilder(new Item(id));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -144,7 +161,7 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 			metadata.addEnchant(Enchantment.LUCK, 1, false);
 			metadata.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		}
-		Conditions.ifThen(this.name != null, () -> metadata.setDisplayName(this.name.toString()));
+		metadata.setDisplayName(this.name.toString());
 		metadata.setLore(Loops.transform(this.description, Text::toString));
 		this.enchantments.forEach((enchantment, level) -> metadata.addEnchant(enchantment, level, true));
 		this.flags.forEach(metadata::addItemFlags);
@@ -185,14 +202,9 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 	}
 
 	@SuppressWarnings("deprecation")
-	public void setMaterial(Material material)
+	private void setMaterial(Material material)
 	{
 		this.id = material.getId();
-	}
-
-	public void setID(int id)
-	{
-		this.id = id;
 	}
 
 	public int getAmount()
@@ -200,17 +212,12 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 		return this.amount;
 	}
 
-	public void setAmount(int amount)
-	{
-		this.amount = amount;
-	}
-
 	public short getDamage()
 	{
 		return this.damage;
 	}
 
-	public void setDamage(int damage)
+	private void setDamage(int damage)
 	{
 		this.damage = (short)damage;
 	}
@@ -221,24 +228,24 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 	}
 
 	@SuppressWarnings("deprecation")
-	public void setData(MaterialData data)
+	private void setData(MaterialData data)
 	{
 		this.data = data.getData();
 	}
 
 	@SuppressWarnings("deprecation")
-	public void setWoolColor(DyeColor dyeColor)
+	private void setWoolColor(DyeColor dyeColor)
 	{
 		this.data = dyeColor.getWoolData();
 	}
 
 	@SuppressWarnings("deprecation")
-	public void setDyeColor(DyeColor dyeColor)
+	private void setDyeColor(DyeColor dyeColor)
 	{
 		this.data = dyeColor.getDyeData();
 	}
 
-	public void setData(int data)
+	private void setData(int data)
 	{
 		this.data = (byte)data;
 	}
@@ -248,19 +255,9 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 		return this.unbreakable;
 	}
 
-	public void setUnbreakable(boolean unbreakable)
-	{
-		this.unbreakable = unbreakable;
-	}
-
 	public boolean hasGlow()
 	{
 		return this.glow;
-	}
-
-	public void setGlow(boolean glow)
-	{
-		this.glow = glow;
 	}
 
 	public Text getName()
@@ -268,29 +265,19 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 		return this.name;
 	}
 
-	public void setName(Text name)
-	{
-		this.name = name;
-	}
-
 	public List<Text> getDescription()
 	{
 		return Collections.unmodifiableList(this.description);
 	}
 
-	public void addDescriptionLines(Text... lines)
+	private void addDescriptionLines(Text... lines)
 	{
 		Loops.forEach(lines, this::addDescriptionLine);
 	}
 
-	public void addDescriptionLine(Text line)
+	private void addDescriptionLine(Text line)
 	{
 		this.description.add(line);
-	}
-
-	public void setDescription(List<Text> lore)
-	{
-		this.description = lore;
 	}
 
 	public Map<Enchantment, Integer> getEnchantments()
@@ -298,14 +285,9 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 		return Collections.unmodifiableMap(this.enchantments);
 	}
 
-	public void addEnchantment(Enchantment enchantment, int level)
+	private void addEnchantment(Enchantment enchantment, int level)
 	{
 		this.enchantments.put(enchantment, level);
-	}
-
-	public void setEnchantments(Map<Enchantment, Integer> enchantments)
-	{
-		this.enchantments = enchantments;
 	}
 
 	public Set<ItemFlag> getFlags()
@@ -313,50 +295,19 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 		return Collections.unmodifiableSet(this.flags);
 	}
 
-	public void addFlags(ItemFlag... flags)
+	private void addFlags(ItemFlag... flags)
 	{
 		Loops.forEach(flags, this::addFlag);
 	}
 
-	public void addFlag(ItemFlag flag)
+	private void addFlag(ItemFlag flag)
 	{
 		this.flags.add(flag);
-	}
-
-	public void setFlags(Set<ItemFlag> flags)
-	{
-		this.flags = flags;
-	}
-
-	public void setMetadataApplier(Consumer<ItemMeta> metadataApplier)
-	{
-		this.metadataApplier = metadataApplier;
 	}
 
 	public static final class ItemBuilder implements Builder<Item>
 	{
 		private Item item;
-
-		private ItemBuilder()
-		{
-			this(new Item());
-		}
-
-		private ItemBuilder(ItemStack itemStack)
-		{
-			this(new Item(itemStack));
-		}
-
-		@SuppressWarnings("deprecation")
-		private ItemBuilder(Material material)
-		{
-			this(new Item(material));
-		}
-
-		private ItemBuilder(int id)
-		{
-			this(new Item(id));
-		}
 
 		private ItemBuilder(Item item)
 		{
@@ -371,13 +322,13 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 
 		public ItemBuilder id(int id)
 		{
-			this.item.setID(id);
+			this.item.id = id;
 			return this;
 		}
 
 		public ItemBuilder amount(int amount)
 		{
-			this.item.setAmount(amount);
+			this.item.amount = amount;
 			return this;
 		}
 
@@ -413,19 +364,29 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 
 		public ItemBuilder unbreakable()
 		{
-			this.item.setUnbreakable(true);
+			return unbreakable(true);
+		}
+
+		public ItemBuilder unbreakable(boolean unbreakable)
+		{
+			this.item.unbreakable = unbreakable;
 			return this;
 		}
 
 		public ItemBuilder glow()
 		{
-			this.item.setGlow(true);
+			return glow(true);
+		}
+
+		public ItemBuilder glow(boolean glow)
+		{
+			this.item.glow = glow;
 			return this;
 		}
 
 		public ItemBuilder name(Text name)
 		{
-			this.item.setName(name);
+			this.item.name = name;
 			return this;
 		}
 
@@ -449,7 +410,7 @@ public final class Item implements Buildable<ItemBuilder>, Serializable
 
 		public ItemBuilder metadata(Consumer<ItemMeta> metadataApplier)
 		{
-			this.item.setMetadataApplier(metadataApplier);
+			this.item.metadataApplier = metadataApplier;
 			return this;
 		}
 

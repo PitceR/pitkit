@@ -25,9 +25,14 @@ public final class ClickEvent implements Serializable
 	private ClickAction action;
 	private Text value;
 
+	public ClickEvent(ClickEvent event)
+	{
+		this(event.action, Text.of(event.value));
+	}
+
 	public ClickEvent(ClickAction action, String value)
 	{
-		this(action, new Text(value));
+		this(action, Text.of(value));
 	}
 
 	public ClickEvent(ClickAction action, Text text)
