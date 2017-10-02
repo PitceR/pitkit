@@ -149,121 +149,6 @@ public final class Text implements Serializable
 		return Objects.hash(this.colored, this.uncolored, this.text);
 	}
 
-	private void addDate(long millis)
-	{
-		String date = TimeUtility.getDate(millis);
-		addHighlightedColored(date);
-	}
-
-	private void addTime(long millis)
-	{
-		String time = TimeUtility.getTime(millis);
-		addHighlightedColored(time);
-	}
-
-	private void addNumber(long number)
-	{
-		String separatedThousands = NumberUtility.separateThousands(number);
-		addHighlightedColored(separatedThousands);
-	}
-
-	private void addNumber(double floatingPointNumber)
-	{
-		String separatedThousands = NumberUtility.separateThousands(floatingPointNumber);
-		addHighlightedColored(separatedThousands);
-	}
-
-	private void addInBrackets(Text text)
-	{
-		addInBrackets(text.toString());
-	}
-
-	private void addInBrackets(String text)
-	{
-		addRegularColored("(");
-		addHighlightedColored(text);
-		addRegularColored(")");
-	}
-
-	private void addRegularColored(Text text)
-	{
-		addRegularColored(text.toString());
-	}
-
-	private void addRegularColored(String text)
-	{
-		addColor(REGULAR_COLOR);
-		addText(text);
-	}
-
-	private void addHighlightedColored(Text text)
-	{
-		addHighlightedColored(text.toString());
-	}
-
-	private void addHighlightedColored(String text)
-	{
-		addColor(HIGHLIGHTED_COLOR);
-		addText(text);
-	}
-
-	private void addErrorColored(Text text)
-	{
-		addErrorColored(text.toString());
-	}
-
-	private void addErrorColored(String text)
-	{
-		addColor(ERROR_COLOR);
-		addText(text);
-	}
-
-	private void addErrorHighlightedColored(Text text)
-	{
-		addErrorHighlightedColored(text.toString());
-	}
-
-	private void addErrorHighlightedColored(String text)
-	{
-		addColor(ERROR_HIGHLIGHTED_COLOR);
-		addText(text);
-	}
-
-	private void addColor(net.md_5.bungee.api.ChatColor color)
-	{
-		addColor(ChatColor.valueOf(color.name()));
-	}
-
-	private void addColor(ChatColor color)
-	{
-		addText(color.toString());
-	}
-
-	private void addPrefix()
-	{
-		addText(PREFIX);
-	}
-
-	private void addText(Text text)
-	{
-		addText(text.toString());
-	}
-
-	private void addText(String text)
-	{
-		this.text.append(text);
-	}
-
-	private void addLine()
-	{
-		this.text.append('\n');
-	}
-
-	private void addSpace()
-	{
-		this.text.append(' ');
-	}
-
 	public boolean isColored()
 	{
 		return this.colored;
@@ -285,127 +170,111 @@ public final class Text implements Serializable
 
 		public TextBuilder date(long millis)
 		{
-			this.text.addDate(millis);
-			return this;
+			String date = TimeUtility.getDate(millis);
+			return highlighted(date);
 		}
 
 		public TextBuilder time(long millis)
 		{
-			this.text.addTime(millis);
-			return this;
+			String time = TimeUtility.getTime(millis);
+			return highlighted(time);
 		}
 
 		public TextBuilder number(long number)
 		{
-			this.text.addNumber(number);
-			return this;
+			String separatedThousands = NumberUtility.separateThousands(number);
+			return highlighted(separatedThousands);
 		}
 
 		public TextBuilder number(double floatingPointNumber)
 		{
-			this.text.addNumber(floatingPointNumber);
-			return this;
+			String separatedThousands = NumberUtility.separateThousands(floatingPointNumber);
+			return highlighted(separatedThousands);
 		}
 
 		public TextBuilder brackets(Text text)
 		{
-			this.text.addInBrackets(text);
-			return this;
+			return brackets(text.toString());
 		}
 
 		public TextBuilder brackets(String text)
 		{
-			this.text.addInBrackets(text);
-			return this;
+			return regular("(").highlighted(text).regular(")");
 		}
 
 		public TextBuilder regular(Text text)
 		{
-			this.text.addRegularColored(text);
-			return this;
+			return regular(text.toString());
 		}
 
 		public TextBuilder regular(String text)
 		{
-			this.text.addRegularColored(text);
-			return this;
+			return color(REGULAR_COLOR).text(text);
 		}
 
 		public TextBuilder highlighted(Text text)
 		{
-			this.text.addHighlightedColored(text);
-			return this;
+			return highlighted(text.toString());
 		}
 
 		public TextBuilder highlighted(String text)
 		{
-			this.text.addHighlightedColored(text);
-			return this;
+			return color(HIGHLIGHTED_COLOR).text(text);
 		}
 
 		public TextBuilder error(Text text)
 		{
-			this.text.addErrorColored(text);
-			return this;
+			return error(text.toString());
 		}
 
 		public TextBuilder error(String text)
 		{
-			this.text.addErrorColored(text);
-			return this;
+			return color(ERROR_COLOR).text(text);
 		}
 
 		public TextBuilder errorHighlighted(Text text)
 		{
-			this.text.addErrorHighlightedColored(text);
-			return this;
+			return errorHighlighted(text.toString());
 		}
 
 		public TextBuilder errorHighlighted(String text)
 		{
-			this.text.addErrorHighlightedColored(text);
-			return this;
+			return color(ERROR_HIGHLIGHTED_COLOR).text(text);
 		}
 
 		public TextBuilder color(net.md_5.bungee.api.ChatColor color)
 		{
-			this.text.addColor(color);
-			return this;
+			return color(ChatColor.valueOf(color.name()));
 		}
 
 		public TextBuilder color(ChatColor color)
 		{
-			this.text.addColor(color);
-			return this;
+			return text(color.toString());
 		}
 
 		public TextBuilder prefix()
 		{
-			this.text.addPrefix();
-			return this;
-		}
-
-		public TextBuilder text(Text text)
-		{
-			this.text.addText(text);
-			return this;
-		}
-
-		public TextBuilder text(String text)
-		{
-			this.text.addText(text);
-			return this;
+			return text(PREFIX);
 		}
 
 		public TextBuilder line()
 		{
-			this.text.addLine();
-			return this;
+			return text("\n");
 		}
 
 		public TextBuilder space()
 		{
-			this.text.addSpace();
+			return text(" ");
+		}
+
+		public TextBuilder text(Text text)
+		{
+			return text(text.toString());
+		}
+
+		public TextBuilder text(String text)
+		{
+			this.text.text.append(text);
 			return this;
 		}
 

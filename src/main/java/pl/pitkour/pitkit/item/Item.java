@@ -201,12 +201,6 @@ public final class Item implements Serializable
 		return this.id;
 	}
 
-	@SuppressWarnings("deprecation")
-	private void setMaterial(Material material)
-	{
-		this.id = material.getId();
-	}
-
 	public int getAmount()
 	{
 		return this.amount;
@@ -217,37 +211,9 @@ public final class Item implements Serializable
 		return this.damage;
 	}
 
-	private void setDamage(int damage)
-	{
-		this.damage = (short)damage;
-	}
-
 	public byte getData()
 	{
 		return this.data;
-	}
-
-	@SuppressWarnings("deprecation")
-	private void setData(MaterialData data)
-	{
-		this.data = data.getData();
-	}
-
-	@SuppressWarnings("deprecation")
-	private void setWoolColor(DyeColor dyeColor)
-	{
-		this.data = dyeColor.getWoolData();
-	}
-
-	@SuppressWarnings("deprecation")
-	private void setDyeColor(DyeColor dyeColor)
-	{
-		this.data = dyeColor.getDyeData();
-	}
-
-	private void setData(int data)
-	{
-		this.data = (byte)data;
 	}
 
 	public boolean isUnbreakable()
@@ -270,39 +236,14 @@ public final class Item implements Serializable
 		return Collections.unmodifiableList(this.description);
 	}
 
-	private void addDescriptionLines(Text... lines)
-	{
-		Loops.forEach(lines, this::addDescriptionLine);
-	}
-
-	private void addDescriptionLine(Text line)
-	{
-		this.description.add(line);
-	}
-
 	public Map<Enchantment, Integer> getEnchantments()
 	{
 		return Collections.unmodifiableMap(this.enchantments);
 	}
 
-	private void addEnchantment(Enchantment enchantment, int level)
-	{
-		this.enchantments.put(enchantment, level);
-	}
-
 	public Set<ItemFlag> getFlags()
 	{
 		return Collections.unmodifiableSet(this.flags);
-	}
-
-	private void addFlags(ItemFlag... flags)
-	{
-		Loops.forEach(flags, this::addFlag);
-	}
-
-	private void addFlag(ItemFlag flag)
-	{
-		this.flags.add(flag);
 	}
 
 	public static final class ItemBuilder implements Builder<Item>
@@ -314,10 +255,10 @@ public final class Item implements Serializable
 			this.item = item;
 		}
 
+		@SuppressWarnings("deprecation")
 		public ItemBuilder material(Material material)
 		{
-			this.item.setMaterial(material);
-			return this;
+			return id(material.getId());
 		}
 
 		public ItemBuilder id(int id)
@@ -334,31 +275,31 @@ public final class Item implements Serializable
 
 		public ItemBuilder damage(int damage)
 		{
-			this.item.setDamage(damage);
+			this.item.damage = (short)damage;
 			return this;
 		}
 
+		@SuppressWarnings("deprecation")
 		public ItemBuilder woolColor(MaterialData data)
 		{
-			this.item.setData(data);
-			return this;
+			return data(data.getData());
 		}
 
+		@SuppressWarnings("deprecation")
 		public ItemBuilder woolColor(DyeColor dyeColor)
 		{
-			this.item.setWoolColor(dyeColor);
-			return this;
+			return data(dyeColor.getWoolData());
 		}
 
+		@SuppressWarnings("deprecation")
 		public ItemBuilder dyeColor(DyeColor dyeColor)
 		{
-			this.item.setDyeColor(dyeColor);
-			return this;
+			return data(dyeColor.getDyeData());
 		}
 
 		public ItemBuilder data(int data)
 		{
-			this.item.setData(data);
+			this.item.data = (byte)data;
 			return this;
 		}
 
@@ -392,19 +333,31 @@ public final class Item implements Serializable
 
 		public ItemBuilder description(Text... lines)
 		{
-			this.item.addDescriptionLines(lines);
+			Loops.forEach(lines, this::description);
+			return this;
+		}
+
+		public ItemBuilder description(Text line)
+		{
+			this.item.description.add(line);
 			return this;
 		}
 
 		public ItemBuilder enchantment(Enchantment enchantment, int level)
 		{
-			this.item.addEnchantment(enchantment, level);
+			this.item.enchantments.put(enchantment, level);
 			return this;
 		}
 
-		public ItemBuilder flags(ItemFlag... flags)
+		public ItemBuilder flag(ItemFlag... flags)
 		{
-			this.item.addFlags(flags);
+			Loops.forEach(flags, this::flag);
+			return this;
+		}
+
+		public ItemBuilder flag(ItemFlag flag)
+		{
+			this.item.flags.add(flag);
 			return this;
 		}
 

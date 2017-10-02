@@ -66,17 +66,17 @@ public final class Message implements Serializable
 
 	private Message(BaseComponent[] baseComponents)
 	{
-		Loops.forEach(baseComponents, this::addText);
+		Loops.forEach(baseComponents, baseComponent -> addPart(new MessagePart(baseComponent)));
 	}
 
 	private Message(String text)
 	{
-		addText(text);
+		addPart(new MessagePart(text));
 	}
 
 	private Message(Text text)
 	{
-		addText(text);
+		addPart(new MessagePart(text));
 	}
 
 	public static Message empty()
@@ -127,6 +127,12 @@ public final class Message implements Serializable
 	public static MessageBuilder builder(Text text)
 	{
 		return new MessageBuilder(new Message(text));
+	}
+
+	private void addPart(MessagePart part)
+	{
+		this.currentPart = part;
+		this.parts.add(part);
 	}
 
 	public void sendChat(Player receiver)
@@ -188,118 +194,12 @@ public final class Message implements Serializable
 		return Objects.hash(this.parts);
 	}
 
-	private void addDate(long millis)
-	{
-		String date = TimeUtility.getDate(millis);
-		addHighlightedColored(date);
-	}
-
-	private void addTime(long millis)
-	{
-		String time = TimeUtility.getTime(millis);
-		addHighlightedColored(time);
-	}
-
-	private void addNumber(long number)
-	{
-		String separatedThousands = NumberUtility.separateThousands(number);
-		addHighlightedColored(separatedThousands);
-	}
-
-	private void addNumber(double floatingPointNumber)
-	{
-		String separatedThousands = NumberUtility.separateThousands(floatingPointNumber);
-		addHighlightedColored(separatedThousands);
-	}
-
-	private void addInBrackets(String text)
-	{
-		addRegularColored("(");
-		addHighlightedColored(text);
-		addRegularColored(")");
-	}
-
-	private void addInBrackets(Text text)
-	{
-		addRegularColored("(");
-		addHighlightedColored(text);
-		addRegularColored(")");
-	}
-
-	private void addRegularColored(String text)
-	{
-		addColored(text, REGULAR_COLOR);
-	}
-
-	private void addRegularColored(Text text)
-	{
-		addColored(text, REGULAR_COLOR);
-	}
-
-	private void addHighlightedColored(String text)
-	{
-		addColored(text, HIGHLIGHTED_COLOR);
-	}
-
-	private void addHighlightedColored(Text text)
-	{
-		addColored(text, HIGHLIGHTED_COLOR);
-	}
-
-	private void addPrefix()
-	{
-		addColored(PREFIX, PREFIX_COLOR);
-	}
-
-	private void addColored(String text, ChatColor color)
-	{
-		addText(text);
-		this.currentPart.color = color;
-	}
-
-	private void addColored(Text text, ChatColor color)
-	{
-		addText(text);
-		this.currentPart.color = color;
-	}
-
-	private void addLine()
-	{
-		addText("\n");
-	}
-
-	private void addSpace()
-	{
-		addText(" ");
-	}
-
-	private void addText(BaseComponent text)
-	{
-		addPart(new MessagePart(text));
-	}
-
-	private void addText(String text)
-	{
-		addPart(new MessagePart(text));
-	}
-
-	private void addText(Text text)
-	{
-		addPart(new MessagePart(text));
-	}
-
-	private void addPart(MessagePart part)
-	{
-		this.currentPart = part;
-		this.parts.add(part);
-	}
-
 	public List<MessagePart> getParts()
 	{
 		return Collections.unmodifiableList(this.parts);
 	}
 
-	public final class MessagePart implements Serializable
+	public final static class MessagePart implements Serializable
 	{
 		private Text text;
 		private ChatColor color;
@@ -327,7 +227,7 @@ public final class Message implements Serializable
 		private MessagePart(BaseComponent baseComponent)
 		{
 			this(Text.of(baseComponent.getInsertion()));
-			setColor(baseComponent.getColor());
+			this.color = ChatColor.valueOf(baseComponent.getColor().name());
 			this.magicFormat = baseComponent.isObfuscated();
 			this.boldFormat = baseComponent.isBold();
 			this.strikethroughFormat = baseComponent.isStrikethrough();
@@ -413,16 +313,6 @@ public final class Message implements Serializable
 			return this.color;
 		}
 
-		private void setColor(net.md_5.bungee.api.ChatColor color)
-		{
-			this.color = ChatColor.valueOf(color.name());
-		}
-
-		private void setColor(ChatColor color)
-		{
-			this.color = color;
-		}
-
 		public boolean isMagicFormat()
 		{
 			return this.magicFormat;
@@ -453,39 +343,9 @@ public final class Message implements Serializable
 			return this.hoverEvent;
 		}
 
-		private void setHoverEvent(HoverAction action, Text text)
-		{
-			this.hoverEvent = new HoverEvent(action, text);
-		}
-
-		private void setHoverEvent(HoverAction action, String value)
-		{
-			this.hoverEvent = new HoverEvent(action, value);
-		}
-
-		private void setHoverEvent(HoverEvent hoverEvent)
-		{
-			this.hoverEvent = hoverEvent;
-		}
-
 		public ClickEvent getClickEvent()
 		{
 			return this.clickEvent;
-		}
-
-		private void setClickEvent(ClickAction action, Text text)
-		{
-			this.clickEvent = new ClickEvent(action, text);
-		}
-
-		private void setClickEvent(ClickAction action, String value)
-		{
-			this.clickEvent = new ClickEvent(action, value);
-		}
-
-		private void setClickEvent(ClickEvent clickEvent)
-		{
-			this.clickEvent = clickEvent;
 		}
 	}
 
@@ -500,109 +360,99 @@ public final class Message implements Serializable
 
 		public MessageBuilder date(long millis)
 		{
-			this.message.addDate(millis);
-			return this;
+			String date = TimeUtility.getDate(millis);
+			return highlighted(date);
 		}
 
 		public MessageBuilder time(long millis)
 		{
-			this.message.addTime(millis);
-			return this;
+			String time = TimeUtility.getTime(millis);
+			return highlighted(time);
 		}
 
 		public MessageBuilder number(long number)
 		{
-			this.message.addNumber(number);
-			return this;
+			String separatedThousands = NumberUtility.separateThousands(number);
+			return highlighted(separatedThousands);
 		}
 
 		public MessageBuilder number(double floatingPointNumber)
 		{
-			this.message.addNumber(floatingPointNumber);
-			return this;
+			String separatedThousands = NumberUtility.separateThousands(floatingPointNumber);
+			return highlighted(separatedThousands);
 		}
 
 		public MessageBuilder brackets(String text)
 		{
-			this.message.addInBrackets(text);
-			return this;
+			return brackets(Text.of(text));
 		}
 
 		public MessageBuilder brackets(Text text)
 		{
-			this.message.addInBrackets(text);
-			return this;
+			return regular("(").highlighted(text).regular(")");
 		}
 
 		public MessageBuilder regular(String text)
 		{
-			this.message.addRegularColored(text);
-			return this;
+			return regular(Text.of(text));
 		}
 
 		public MessageBuilder regular(Text text)
 		{
-			this.message.addRegularColored(text);
-			return this;
+			return text(text).color(REGULAR_COLOR);
 		}
 
 		public MessageBuilder highlighted(String text)
 		{
-			this.message.addHighlightedColored(text);
-			return this;
+			return highlighted(Text.of(text));
 		}
 
 		public MessageBuilder highlighted(Text text)
 		{
-			this.message.addHighlightedColored(text);
-			return this;
+			return text(text).color(HIGHLIGHTED_COLOR);
 		}
 
 		public MessageBuilder prefix()
 		{
-			this.message.addPrefix();
-			return this;
+			return text(PREFIX).color(PREFIX_COLOR);
 		}
 
 		public MessageBuilder line()
 		{
-			this.message.addLine();
-			return this;
+			return text("\n");
 		}
 
 		public MessageBuilder space()
 		{
-			this.message.addSpace();
-			return this;
+			return text(" ");
 		}
 
 		public MessageBuilder text(BaseComponent baseComponent)
 		{
-			this.message.addText(baseComponent);
+			this.message.addPart(new MessagePart(baseComponent));
 			return this;
 		}
 
 		public MessageBuilder text(String text)
 		{
-			this.message.addText(text);
+			this.message.addPart(new MessagePart(text));
 			return this;
 		}
 
 		public MessageBuilder text(Text text)
 		{
-			this.message.addText(text);
+			this.message.addPart(new MessagePart(text));
 			return this;
 		}
 
 		public MessageBuilder color(net.md_5.bungee.api.ChatColor color)
 		{
-			this.message.currentPart.setColor(color);
-			return this;
+			return color(ChatColor.valueOf(color.name()));
 		}
 
 		public MessageBuilder color(ChatColor color)
 		{
-			this.message.currentPart.setColor(color);
+			this.message.currentPart.color = color;
 			return this;
 		}
 
@@ -663,37 +513,33 @@ public final class Message implements Serializable
 
 		public MessageBuilder hover(HoverAction action, Text text)
 		{
-			this.message.currentPart.setHoverEvent(action, text);
-			return this;
+			return hover(new HoverEvent(action, text));
 		}
 
 		public MessageBuilder hover(HoverAction action, String value)
 		{
-			this.message.currentPart.setHoverEvent(action, value);
-			return this;
+			return hover(new HoverEvent(action, value));
 		}
 
 		public MessageBuilder hover(HoverEvent hoverEvent)
 		{
-			this.message.currentPart.setHoverEvent(hoverEvent);
+			this.message.currentPart.hoverEvent = hoverEvent;
 			return this;
 		}
 
 		public MessageBuilder click(ClickAction action, Text text)
 		{
-			this.message.currentPart.setClickEvent(action, text);
-			return this;
+			return click(new ClickEvent(action, text));
 		}
 
 		public MessageBuilder click(ClickAction action, String value)
 		{
-			this.message.currentPart.setClickEvent(action, value);
-			return this;
+			return click(new ClickEvent(action, value));
 		}
 
 		public MessageBuilder click(ClickEvent clickEvent)
 		{
-			this.message.currentPart.setClickEvent(clickEvent);
+			this.message.currentPart.clickEvent = clickEvent;
 			return this;
 		}
 
