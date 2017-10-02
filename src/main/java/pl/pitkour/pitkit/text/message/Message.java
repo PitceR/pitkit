@@ -43,6 +43,8 @@ import pl.pitkour.pitkit.text.message.event.action.HoverAction;
 import pl.pitkour.pitkit.utility.Builder;
 import pl.pitkour.pitkit.utility.NumberUtility;
 import pl.pitkour.pitkit.utility.TimeUtility;
+import static pl.pitkour.pitkit.text.Text.ERROR_COLOR;
+import static pl.pitkour.pitkit.text.Text.ERROR_HIGHLIGHTED_COLOR;
 import static pl.pitkour.pitkit.text.Text.HIGHLIGHTED_COLOR;
 import static pl.pitkour.pitkit.text.Text.PREFIX;
 import static pl.pitkour.pitkit.text.Text.PREFIX_COLOR;
@@ -410,6 +412,26 @@ public final class Message implements Serializable
 		public MessageBuilder highlighted(Text text)
 		{
 			return text(text).color(HIGHLIGHTED_COLOR);
+		}
+
+		public MessageBuilder error(String text)
+		{
+			return error(Text.of(text));
+		}
+
+		public MessageBuilder error(Text text)
+		{
+			return color(ERROR_COLOR).text(text);
+		}
+
+		public MessageBuilder errorHighlighted(String text)
+		{
+			return errorHighlighted(Text.of(text));
+		}
+
+		public MessageBuilder errorHighlighted(Text text)
+		{
+			return color(ERROR_HIGHLIGHTED_COLOR).text(text);
 		}
 
 		public MessageBuilder prefix()
