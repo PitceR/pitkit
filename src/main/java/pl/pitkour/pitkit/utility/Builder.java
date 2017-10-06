@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package pl.pitkour.pitkit.utility;
 
 public interface Builder<T>
