@@ -15,6 +15,7 @@
  */
 package pl.pitkour.pitkit.text.message.event.action;
 
+import java.util.Objects;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 
 public enum ClickAction
@@ -27,6 +28,7 @@ public enum ClickAction
 
 	public static ClickAction get(Action action)
 	{
+		Objects.requireNonNull(action, "action must not be null");
 		switch(action)
 		{
 			case RUN_COMMAND:

@@ -88,21 +88,25 @@ public final class Message implements Serializable
 
 	public static Message of(Message message)
 	{
+		Objects.requireNonNull(message, "message must not be null");
 		return new Message(message);
 	}
 
 	public static Message of(BaseComponent... baseComponents)
 	{
+		Objects.requireNonNull(baseComponents, "baseComponents must not be null");
 		return new Message(baseComponents);
 	}
 
 	public static Message of(String text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return new Message(text);
 	}
 
 	public static Message of(Text text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return new Message(text);
 	}
 
@@ -113,21 +117,25 @@ public final class Message implements Serializable
 
 	public static MessageBuilder builder(Message message)
 	{
+		Objects.requireNonNull(message, "message must not be null");
 		return new MessageBuilder(new Message(message));
 	}
 
 	public static MessageBuilder builder(BaseComponent... baseComponents)
 	{
+		Objects.requireNonNull(baseComponents, "baseComponents must not be null");
 		return new MessageBuilder(new Message(baseComponents));
 	}
 
 	public static MessageBuilder builder(String text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return new MessageBuilder(new Message(text));
 	}
 
 	public static MessageBuilder builder(Text text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return new MessageBuilder(new Message(text));
 	}
 
@@ -139,16 +147,19 @@ public final class Message implements Serializable
 
 	public void sendChat(Player receiver)
 	{
+		Objects.requireNonNull(receiver, "receiver must not be null");
 		sendPacket(receiver, ChatMessageType.CHAT);
 	}
 
 	public void sendGameInfo(Player receiver)
 	{
+		Objects.requireNonNull(receiver, "receiver must not be null");
 		sendPacket(receiver, ChatMessageType.GAME_INFO);
 	}
 
 	public void sendSystem(Player receiver)
 	{
+		Objects.requireNonNull(receiver, "receiver must not be null");
 		sendPacket(receiver, ChatMessageType.SYSTEM);
 	}
 
@@ -386,51 +397,61 @@ public final class Message implements Serializable
 
 		public MessageBuilder brackets(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return brackets(Text.of(text));
 		}
 
 		public MessageBuilder brackets(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return regular("(").highlighted(text).regular(")");
 		}
 
 		public MessageBuilder regular(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return regular(Text.of(text));
 		}
 
 		public MessageBuilder regular(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return text(text).color(REGULAR_COLOR);
 		}
 
 		public MessageBuilder highlighted(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return highlighted(Text.of(text));
 		}
 
 		public MessageBuilder highlighted(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return text(text).color(HIGHLIGHTED_COLOR);
 		}
 
 		public MessageBuilder error(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return error(Text.of(text));
 		}
 
 		public MessageBuilder error(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return color(ERROR_COLOR).text(text);
 		}
 
 		public MessageBuilder errorHighlighted(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return errorHighlighted(Text.of(text));
 		}
 
 		public MessageBuilder errorHighlighted(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return color(ERROR_HIGHLIGHTED_COLOR).text(text);
 		}
 
@@ -451,29 +472,34 @@ public final class Message implements Serializable
 
 		public MessageBuilder text(BaseComponent baseComponent)
 		{
+			Objects.requireNonNull(baseComponent, "baseComponent must not be null");
 			this.message.addPart(new MessagePart(baseComponent));
 			return this;
 		}
 
 		public MessageBuilder text(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			this.message.addPart(new MessagePart(text));
 			return this;
 		}
 
 		public MessageBuilder text(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			this.message.addPart(new MessagePart(text));
 			return this;
 		}
 
 		public MessageBuilder color(net.md_5.bungee.api.ChatColor color)
 		{
+			Objects.requireNonNull(color, "color must not be null");
 			return color(ChatColor.valueOf(color.name()));
 		}
 
 		public MessageBuilder color(ChatColor color)
 		{
+			Objects.requireNonNull(color, "color must not be null");
 			this.message.currentPart.color = color;
 			return this;
 		}
@@ -535,33 +561,43 @@ public final class Message implements Serializable
 
 		public MessageBuilder hover(HoverAction action, Text text)
 		{
+			Objects.requireNonNull(action, "action must not be null");
+			Objects.requireNonNull(text, "text must not be null");
 			return hover(new HoverEvent(action, text));
 		}
 
 		public MessageBuilder hover(HoverAction action, String value)
 		{
+			Objects.requireNonNull(action, "action must not be null");
+			Objects.requireNonNull(value, "value must not be null");
 			return hover(new HoverEvent(action, value));
 		}
 
-		public MessageBuilder hover(HoverEvent hoverEvent)
+		public MessageBuilder hover(HoverEvent event)
 		{
-			this.message.currentPart.hoverEvent = hoverEvent;
+			Objects.requireNonNull(event, "event must not be null");
+			this.message.currentPart.hoverEvent = event;
 			return this;
 		}
 
 		public MessageBuilder click(ClickAction action, Text text)
 		{
+			Objects.requireNonNull(action, "action must not be null");
+			Objects.requireNonNull(text, "text must not be null");
 			return click(new ClickEvent(action, text));
 		}
 
 		public MessageBuilder click(ClickAction action, String value)
 		{
+			Objects.requireNonNull(action, "action must not be null");
+			Objects.requireNonNull(value, "value must not be null");
 			return click(new ClickEvent(action, value));
 		}
 
-		public MessageBuilder click(ClickEvent clickEvent)
+		public MessageBuilder click(ClickEvent event)
 		{
-			this.message.currentPart.clickEvent = clickEvent;
+			Objects.requireNonNull(event, "event must not be null");
+			this.message.currentPart.clickEvent = event;
 			return this;
 		}
 

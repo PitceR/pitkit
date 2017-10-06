@@ -15,6 +15,7 @@
  */
 package pl.pitkour.pitkit.text.message.event.action;
 
+import java.util.Objects;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 
 public enum HoverAction
@@ -26,6 +27,7 @@ public enum HoverAction
 
 	public static HoverAction get(Action action)
 	{
+		Objects.requireNonNull(action, "action must not be null");
 		switch(action)
 		{
 			case SHOW_TEXT:

@@ -27,7 +27,7 @@ public final class HoverEvent implements Serializable
 
 	public HoverEvent(HoverEvent event)
 	{
-		this(event.action, Text.of(event.value));
+		this(event.action, event.value);
 	}
 
 	public HoverEvent(HoverAction action, String value)
@@ -37,6 +37,8 @@ public final class HoverEvent implements Serializable
 
 	public HoverEvent(HoverAction action, Text text)
 	{
+		Objects.requireNonNull(action, "action must not be null");
+		Objects.requireNonNull(text, "text must not be null");
 		this.action = action;
 		this.value = text;
 	}

@@ -27,7 +27,7 @@ public final class ClickEvent implements Serializable
 
 	public ClickEvent(ClickEvent event)
 	{
-		this(event.action, Text.of(event.value));
+		this(event.action, event.value);
 	}
 
 	public ClickEvent(ClickAction action, String value)
@@ -37,6 +37,8 @@ public final class ClickEvent implements Serializable
 
 	public ClickEvent(ClickAction action, Text text)
 	{
+		Objects.requireNonNull(action, "action must not be null");
+		Objects.requireNonNull(text, "text must not be null");
 		this.action = action;
 		this.value = text;
 	}

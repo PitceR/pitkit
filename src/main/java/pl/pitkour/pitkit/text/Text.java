@@ -66,16 +66,19 @@ public final class Text implements Serializable
 
 	public static Text of(Text text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return new Text(text);
 	}
 
 	public static Text of(BaseComponent... baseComponents)
 	{
+		Objects.requireNonNull(baseComponents, "baseComponents must not be null");
 		return new Text(baseComponents);
 	}
 
 	public static Text of(String text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return new Text(text);
 	}
 
@@ -86,31 +89,37 @@ public final class Text implements Serializable
 
 	public static TextBuilder builder(Text text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return new TextBuilder(new Text(text));
 	}
 
 	public static TextBuilder builder(BaseComponent... baseComponents)
 	{
+		Objects.requireNonNull(baseComponents, "baseComponents must not be null");
 		return new TextBuilder(new Text(baseComponents));
 	}
 
 	public static TextBuilder builder(String text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return new TextBuilder(new Text(text));
 	}
 
 	public static String colorize(String text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return ChatColor.translateAlternateColorCodes('&', text);
 	}
 
 	public static String uncolorize(String text)
 	{
+		Objects.requireNonNull(text, "text must not be null");
 		return ChatColor.stripColor(text);
 	}
 
 	public void send(CommandSender receiver)
 	{
+		Objects.requireNonNull(receiver, "receiver must not be null");
 		receiver.sendMessage(toString());
 	}
 
@@ -194,61 +203,73 @@ public final class Text implements Serializable
 
 		public TextBuilder brackets(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return brackets(text.toString());
 		}
 
 		public TextBuilder brackets(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return regular("(").highlighted(text).regular(")");
 		}
 
 		public TextBuilder regular(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return regular(text.toString());
 		}
 
 		public TextBuilder regular(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return color(REGULAR_COLOR).text(text);
 		}
 
 		public TextBuilder highlighted(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return highlighted(text.toString());
 		}
 
 		public TextBuilder highlighted(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return color(HIGHLIGHTED_COLOR).text(text);
 		}
 
 		public TextBuilder error(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return error(text.toString());
 		}
 
 		public TextBuilder error(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return color(ERROR_COLOR).text(text);
 		}
 
 		public TextBuilder errorHighlighted(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return errorHighlighted(text.toString());
 		}
 
 		public TextBuilder errorHighlighted(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return color(ERROR_HIGHLIGHTED_COLOR).text(text);
 		}
 
 		public TextBuilder color(net.md_5.bungee.api.ChatColor color)
 		{
+			Objects.requireNonNull(color, "color must not be null");
 			return color(ChatColor.valueOf(color.name()));
 		}
 
 		public TextBuilder color(ChatColor color)
 		{
+			Objects.requireNonNull(color, "color must not be null");
 			return text(color.toString());
 		}
 
@@ -269,11 +290,13 @@ public final class Text implements Serializable
 
 		public TextBuilder text(Text text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			return text(text.toString());
 		}
 
 		public TextBuilder text(String text)
 		{
+			Objects.requireNonNull(text, "text must not be null");
 			this.text.text.append(text);
 			return this;
 		}

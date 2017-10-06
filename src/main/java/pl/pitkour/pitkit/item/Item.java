@@ -106,16 +106,19 @@ public final class Item implements Serializable
 
 	public static Item of(Item item)
 	{
+		Objects.requireNonNull(item, "item must not be null");
 		return new Item(item);
 	}
 
 	public static Item of(ItemStack itemStack)
 	{
+		Objects.requireNonNull(itemStack, "itemStack must not be null");
 		return new Item(itemStack);
 	}
 
 	public static Item of(Material material)
 	{
+		Objects.requireNonNull(material, "material must not be null");
 		return new Item(material);
 	}
 
@@ -131,16 +134,19 @@ public final class Item implements Serializable
 
 	public static ItemBuilder builder(Item item)
 	{
+		Objects.requireNonNull(item, "item must not be null");
 		return new ItemBuilder(new Item(item));
 	}
 
 	public static ItemBuilder builder(ItemStack itemStack)
 	{
+		Objects.requireNonNull(itemStack, "itemStack must not be null");
 		return new ItemBuilder(new Item(itemStack));
 	}
 
 	public static ItemBuilder builder(Material material)
 	{
+		Objects.requireNonNull(material, "material must not be null");
 		return new ItemBuilder(new Item(material));
 	}
 
@@ -258,6 +264,7 @@ public final class Item implements Serializable
 		@SuppressWarnings("deprecation")
 		public ItemBuilder material(Material material)
 		{
+			Objects.requireNonNull(material, "material must not be null");
 			return id(material.getId());
 		}
 
@@ -282,18 +289,21 @@ public final class Item implements Serializable
 		@SuppressWarnings("deprecation")
 		public ItemBuilder woolColor(MaterialData data)
 		{
+			Objects.requireNonNull(data, "data must not be null");
 			return data(data.getData());
 		}
 
 		@SuppressWarnings("deprecation")
-		public ItemBuilder woolColor(DyeColor dyeColor)
+		public ItemBuilder woolColor(DyeColor woolColor)
 		{
-			return data(dyeColor.getWoolData());
+			Objects.requireNonNull(woolColor, "woolColor must not be null");
+			return data(woolColor.getWoolData());
 		}
 
 		@SuppressWarnings("deprecation")
 		public ItemBuilder dyeColor(DyeColor dyeColor)
 		{
+			Objects.requireNonNull(dyeColor, "dyeColor must not be null");
 			return data(dyeColor.getDyeData());
 		}
 
@@ -327,42 +337,49 @@ public final class Item implements Serializable
 
 		public ItemBuilder name(Text name)
 		{
+			Objects.requireNonNull(name, "name must not be null");
 			this.item.name = name;
 			return this;
 		}
 
 		public ItemBuilder description(Text... lines)
 		{
+			Objects.requireNonNull(lines, "lines must not be null");
 			Loops.forEach(lines, this::description);
 			return this;
 		}
 
 		public ItemBuilder description(Text line)
 		{
+			Objects.requireNonNull(line, "line must not be null");
 			this.item.description.add(line);
 			return this;
 		}
 
 		public ItemBuilder enchantment(Enchantment enchantment, int level)
 		{
+			Objects.requireNonNull(enchantment, "enchantment must not be null");
 			this.item.enchantments.put(enchantment, level);
 			return this;
 		}
 
 		public ItemBuilder flag(ItemFlag... flags)
 		{
+			Objects.requireNonNull(flags, "flags must not be null");
 			Loops.forEach(flags, this::flag);
 			return this;
 		}
 
 		public ItemBuilder flag(ItemFlag flag)
 		{
+			Objects.requireNonNull(flag, "flag must not be null");
 			this.item.flags.add(flag);
 			return this;
 		}
 
 		public ItemBuilder metadata(Consumer<ItemMeta> metadataApplier)
 		{
+			Objects.requireNonNull(metadataApplier, "metadataApplier must not be null");
 			this.item.metadataApplier = metadataApplier;
 			return this;
 		}
