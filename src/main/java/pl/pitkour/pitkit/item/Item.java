@@ -28,12 +28,19 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import com.github.pitcer.shorts.Conditions;
 import com.github.pitcer.shorts.Loops;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
+import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 import pl.pitkour.pitkit.text.Text;
 import pl.pitkour.pitkit.utility.Builder;
@@ -50,7 +57,7 @@ public final class Item implements Serializable
 	private List<Text> description = new ArrayList<>();
 	private Map<Enchantment, Integer> enchantments = new TreeMap<>();
 	private Set<ItemFlag> flags = EnumSet.noneOf(ItemFlag.class);
-	private Consumer<ItemMeta> metadataApplier;
+	private transient List<Consumer<ItemMeta>> metadataAppliers = new ArrayList<>();
 
 	private Item()
 	{}
@@ -67,7 +74,7 @@ public final class Item implements Serializable
 		this.description = Loops.transform(item.description, Text::of);
 		this.enchantments = new TreeMap<>(item.enchantments);
 		this.flags = EnumSet.copyOf(item.flags);
-		this.metadataApplier = item.metadataApplier;
+		this.metadataAppliers = new ArrayList<>(item.metadataAppliers);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -161,7 +168,7 @@ public final class Item implements Serializable
 	{
 		ItemStack item = new ItemStack(this.id, this.amount, this.damage, this.data);
 		ItemMeta metadata = item.getItemMeta();
-		Conditions.ifThen(this.metadataApplier != null, () -> this.metadataApplier.accept(metadata));
+		this.metadataAppliers.forEach(metadataApplier -> metadataApplier.accept(metadata));
 		metadata.setUnbreakable(this.unbreakable);
 		if(this.glow)
 		{
@@ -378,10 +385,77 @@ public final class Item implements Serializable
 			return this;
 		}
 
+		@SuppressWarnings("deprecation")
+		public ItemBuilder skull(String owner)
+		{
+			Objects.requireNonNull(owner, "owner must not be null");
+			return metadata(metadata ->
+			{
+				if(!(metadata instanceof SkullMeta))
+				{
+					throw new ClassCastException("metadata must be SkullMeta");
+				}
+				SkullMeta skullMetadata = (SkullMeta)metadata;
+				skullMetadata.setOwner(owner);
+			});
+		}
+
+		@SuppressWarnings("deprecation")
+		public ItemBuilder banner(DyeColor baseColor, Pattern... patterns)
+		{
+			Objects.requireNonNull(baseColor, "baseColor must not be null");
+			Objects.requireNonNull(patterns, "patterns must not be null");
+			return metadata(metadata ->
+			{
+				if(!(metadata instanceof BannerMeta))
+				{
+					throw new ClassCastException("metadata must be BannerMeta");
+				}
+				BannerMeta bannerMetadata = (BannerMeta)metadata;
+				bannerMetadata.setBaseColor(baseColor);
+				Loops.forEach(patterns, bannerMetadata::addPattern);
+			});
+		}
+
+		public ItemBuilder armorColor(Color color)
+		{
+			Objects.requireNonNull(color, "color must not be null");
+			return metadata(metadata ->
+			{
+				if(!(metadata instanceof LeatherArmorMeta))
+				{
+					throw new ClassCastException("metadata must be LeatherArmorMeta");
+				}
+				LeatherArmorMeta armorMetadata = (LeatherArmorMeta)metadata;
+				armorMetadata.setColor(color);
+			});
+		}
+
+		public ItemBuilder fireworkEffect(FireworkEffect effect)
+		{
+			Objects.requireNonNull(effect, "effect must not be null");
+			return metadata(metadata ->
+			{
+				if(!(metadata instanceof FireworkEffectMeta))
+				{
+					throw new ClassCastException("metadata must be FireworkEffectMeta");
+				}
+				FireworkEffectMeta fireworkEffectMetadata = (FireworkEffectMeta)metadata;
+				fireworkEffectMetadata.setEffect(effect);
+			});
+		}
+
+		public ItemBuilder metadata(Consumer<ItemMeta>... metadataAppliers)
+		{
+			Objects.requireNonNull(metadataAppliers, "metadataAppliers must not be null");
+			Loops.forEach(metadataAppliers, this::metadata);
+			return this;
+		}
+
 		public ItemBuilder metadata(Consumer<ItemMeta> metadataApplier)
 		{
 			Objects.requireNonNull(metadataApplier, "metadataApplier must not be null");
-			this.item.metadataApplier = metadataApplier;
+			this.item.metadataAppliers.add(metadataApplier);
 			return this;
 		}
 
