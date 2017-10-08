@@ -28,7 +28,9 @@ public final class TimeUtility
 	private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
 	private TimeUtility()
-	{}
+	{
+		throw new UnsupportedOperationException("cannot create instance of utility class");
+	}
 
 	public static String getDate(long millis)
 	{

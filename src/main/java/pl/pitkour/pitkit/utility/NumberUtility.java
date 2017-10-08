@@ -29,7 +29,9 @@ public final class NumberUtility
 	private static final Random RANDOM = ThreadLocalRandom.current();
 
 	private NumberUtility()
-	{}
+	{
+		throw new UnsupportedOperationException("cannot create instance of utility class");
+	}
 
 	public static Optional<Byte> parseByte(String string)
 	{
