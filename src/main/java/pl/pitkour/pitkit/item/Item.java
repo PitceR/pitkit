@@ -34,13 +34,16 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.material.MaterialData;
 import pl.pitkour.pitkit.text.Text;
 import pl.pitkour.pitkit.utility.Builder;
@@ -442,6 +445,35 @@ public final class Item implements Serializable
 				}
 				FireworkEffectMeta fireworkEffectMetadata = (FireworkEffectMeta)metadata;
 				fireworkEffectMetadata.setEffect(effect);
+			});
+		}
+
+		public ItemBuilder firework(int power, FireworkEffect... effects)
+		{
+			Objects.requireNonNull(effects, "effects must not be null");
+			return metadata(metadata ->
+			{
+				if(!(metadata instanceof FireworkMeta))
+				{
+					throw new IllegalStateException("item metadata must be a FireworkMeta");
+				}
+				FireworkMeta fireworkMetadata = (FireworkMeta)metadata;
+				fireworkMetadata.addEffects(effects);
+				fireworkMetadata.setPower(power);
+			});
+		}
+
+		public ItemBuilder spawnEgg(EntityType entityType)
+		{
+			Objects.requireNonNull(entityType, "entityType must not be null");
+			return metadata(metadata ->
+			{
+				if(!(metadata instanceof SpawnEggMeta))
+				{
+					throw new IllegalStateException("item metadata must be a SpawnEggMeta");
+				}
+				SpawnEggMeta spawnEggMetadata = (SpawnEggMeta)metadata;
+				spawnEggMetadata.setSpawnedType(entityType);
 			});
 		}
 
