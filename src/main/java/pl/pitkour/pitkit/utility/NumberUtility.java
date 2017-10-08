@@ -73,6 +73,16 @@ public final class NumberUtility
 		return THOUSANDS_SEPARATOR.format(number);
 	}
 
+	public static boolean equals(float float1, float float2)
+	{
+		return Float.floatToIntBits(float1) == Float.floatToIntBits(float2);
+	}
+
+	public static boolean equals(double double1, double double2)
+	{
+		return Double.doubleToLongBits(double1) == Double.doubleToLongBits(double2);
+	}
+
 	public static boolean chance(double percent)
 	{
 		int randomInteger = random(100_000);
