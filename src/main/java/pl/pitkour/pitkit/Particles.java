@@ -65,11 +65,6 @@ public final class Particles implements Serializable
 		this.data = Arrays.copyOf(particles.data, particles.data.length);
 	}
 
-	private Particles(EnumParticle particle)
-	{
-		this(CraftParticle.toBukkit(particle));
-	}
-
 	private Particles(Particle particle)
 	{
 		this.particle = particle;
@@ -79,12 +74,6 @@ public final class Particles implements Serializable
 	{
 		Objects.requireNonNull(particles, "particles must not be null");
 		return new Particles(particles);
-	}
-
-	public static Particles of(EnumParticle particle)
-	{
-		Objects.requireNonNull(particle, "particle must not be null");
-		return new Particles(particle);
 	}
 
 	public static Particles of(Particle particle)
@@ -97,12 +86,6 @@ public final class Particles implements Serializable
 	{
 		Objects.requireNonNull(particles, "particles must not be null");
 		return new ParticlesBuilder(Particles.of(particles));
-	}
-
-	public static ParticlesBuilder builder(EnumParticle particle)
-	{
-		Objects.requireNonNull(particle, "particle must not be null");
-		return new ParticlesBuilder(new Particles(particle));
 	}
 
 	public static ParticlesBuilder builder(Particle particle)
@@ -239,12 +222,6 @@ public final class Particles implements Serializable
 		private ParticlesBuilder(Particles particles)
 		{
 			this.particles = particles;
-		}
-
-		public ParticlesBuilder particle(EnumParticle particle)
-		{
-			Objects.requireNonNull(particle, "particle must not be null");
-			return particle(CraftParticle.toBukkit(particle));
 		}
 
 		public ParticlesBuilder particle(Particle particle)
