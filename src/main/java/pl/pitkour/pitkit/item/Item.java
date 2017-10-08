@@ -393,7 +393,7 @@ public final class Item implements Serializable
 			{
 				if(!(metadata instanceof SkullMeta))
 				{
-					throw new ClassCastException("metadata must be SkullMeta");
+					throw new IllegalStateException("item metadata must be a SkullMeta");
 				}
 				SkullMeta skullMetadata = (SkullMeta)metadata;
 				skullMetadata.setOwner(owner);
@@ -409,7 +409,7 @@ public final class Item implements Serializable
 			{
 				if(!(metadata instanceof BannerMeta))
 				{
-					throw new ClassCastException("metadata must be BannerMeta");
+					throw new IllegalStateException("item metadata must be a BannerMeta");
 				}
 				BannerMeta bannerMetadata = (BannerMeta)metadata;
 				bannerMetadata.setBaseColor(baseColor);
@@ -424,7 +424,7 @@ public final class Item implements Serializable
 			{
 				if(!(metadata instanceof LeatherArmorMeta))
 				{
-					throw new ClassCastException("metadata must be LeatherArmorMeta");
+					throw new IllegalStateException("item metadata must be a LeatherArmorMeta");
 				}
 				LeatherArmorMeta armorMetadata = (LeatherArmorMeta)metadata;
 				armorMetadata.setColor(color);
@@ -438,7 +438,7 @@ public final class Item implements Serializable
 			{
 				if(!(metadata instanceof FireworkEffectMeta))
 				{
-					throw new ClassCastException("metadata must be FireworkEffectMeta");
+					throw new IllegalStateException("item metadata must be a FireworkEffectMeta");
 				}
 				FireworkEffectMeta fireworkEffectMetadata = (FireworkEffectMeta)metadata;
 				fireworkEffectMetadata.setEffect(effect);
