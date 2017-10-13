@@ -478,13 +478,6 @@ public final class Item implements Serializable
 			});
 		}
 
-		public ItemBuilder metadata(Consumer<ItemMeta>... metadataAppliers)
-		{
-			Objects.requireNonNull(metadataAppliers, "metadataAppliers must not be null");
-			Loops.forEach(metadataAppliers, this::metadata);
-			return this;
-		}
-
 		public ItemBuilder metadata(Consumer<ItemMeta> metadataApplier)
 		{
 			Objects.requireNonNull(metadataApplier, "metadataApplier must not be null");
