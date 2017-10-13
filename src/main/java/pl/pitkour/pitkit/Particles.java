@@ -38,6 +38,7 @@ import pl.pitkour.pitkit.utility.NumberUtility;
 
 public final class Particles implements Serializable
 {
+	private static final long serialVersionUID = -8207190707919660602L;
 	private Particle particle;
 	private float x;
 	private float y;

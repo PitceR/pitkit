@@ -53,6 +53,7 @@ import static pl.pitkour.pitkit.text.Text.REGULAR_COLOR;
 
 public final class Message implements Serializable
 {
+	private static final long serialVersionUID = 5831073233370903808L;
 	private List<MessagePart> parts = new ArrayList<>();
 	private transient MessagePart currentPart;
 
@@ -215,6 +216,7 @@ public final class Message implements Serializable
 
 	public final static class MessagePart implements Serializable
 	{
+		private static final long serialVersionUID = 5790324967422029011L;
 		private Text text;
 		private ChatColor color;
 		private boolean magicFormat;

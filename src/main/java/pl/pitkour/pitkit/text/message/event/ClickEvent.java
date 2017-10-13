@@ -23,6 +23,7 @@ import pl.pitkour.pitkit.text.message.event.action.ClickAction;
 
 public final class ClickEvent implements Serializable
 {
+	private static final long serialVersionUID = -1986826669350946698L;
 	private ClickAction action;
 	private Text value;
 

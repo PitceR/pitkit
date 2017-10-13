@@ -50,6 +50,7 @@ import pl.pitkour.pitkit.utility.Builder;
 
 public final class Item implements Serializable
 {
+	private static final long serialVersionUID = 974963540133314215L;
 	private int id;
 	private int amount = 1;
 	private short damage;

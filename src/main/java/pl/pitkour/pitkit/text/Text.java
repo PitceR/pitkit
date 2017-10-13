@@ -34,6 +34,7 @@ public final class Text implements Serializable
 	public static final ChatColor ERROR_HIGHLIGHTED_COLOR = ChatColor.GRAY;
 	public static final ChatColor PREFIX_COLOR = ChatColor.DARK_GRAY;
 	public static final Text PREFIX = builder().color(PREFIX_COLOR).text("> ").build();
+	private static final long serialVersionUID = -1827542141277789793L;
 	private StringBuilder text;
 	private boolean colored;
 	private boolean uncolored;

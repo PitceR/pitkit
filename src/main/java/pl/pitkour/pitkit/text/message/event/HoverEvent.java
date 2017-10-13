@@ -23,6 +23,7 @@ import pl.pitkour.pitkit.text.message.event.action.HoverAction;
 
 public final class HoverEvent implements Serializable
 {
+	private static final long serialVersionUID = 8403961229699117222L;
 	private HoverAction action;
 	private Text value;
 
