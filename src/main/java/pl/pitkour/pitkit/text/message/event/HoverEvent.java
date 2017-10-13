@@ -57,7 +57,7 @@ public final class HoverEvent implements Serializable
 			return false;
 		}
 		HoverEvent that = (HoverEvent)object;
-		return this.action == that.action && this.value.equals(that.value);
+		return this.action == that.action && Objects.equals(this.value, that.value);
 	}
 
 	@Override

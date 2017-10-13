@@ -151,7 +151,7 @@ public final class Text implements Serializable
 			return false;
 		}
 		Text that = (Text)object;
-		return this.colored == that.colored && this.uncolored == that.uncolored && this.text.toString().equals(that.text.toString());
+		return this.colored == that.colored && this.uncolored == that.uncolored && Objects.equals(this.text.toString(), that.text.toString());
 	}
 
 	@Override

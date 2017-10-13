@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Objects;
 import org.bukkit.Material;
 import org.junit.Test;
 
@@ -39,6 +40,6 @@ public class ItemSerializationTest
 		ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
 		Object object = inputStream.readObject();
 		inputStream.close();
-		assert diamond.equals(object);
+		assert Objects.equals(diamond, object);
 	}
 }

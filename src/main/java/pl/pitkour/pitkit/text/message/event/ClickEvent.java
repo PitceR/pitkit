@@ -57,7 +57,7 @@ public final class ClickEvent implements Serializable
 			return false;
 		}
 		ClickEvent that = (ClickEvent)object;
-		return this.action == that.action && this.value.equals(that.value);
+		return this.action == that.action && Objects.equals(this.value, that.value);
 	}
 
 	@Override

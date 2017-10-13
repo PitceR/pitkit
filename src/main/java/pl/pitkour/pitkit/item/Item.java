@@ -199,7 +199,7 @@ public final class Item implements Serializable
 			return false;
 		}
 		Item that = (Item)object;
-		return this.id == that.id && this.amount == that.amount && this.damage == that.damage && this.data == that.data && this.unbreakable == that.unbreakable && this.glow == that.glow && this.name.equals(that.name) && this.description.equals(that.description) && this.enchantments.equals(that.enchantments) && this.flags.equals(that.flags);
+		return this.id == that.id && this.amount == that.amount && this.damage == that.damage && this.data == that.data && this.unbreakable == that.unbreakable && this.glow == that.glow && Objects.equals(this.name, that.name) && Objects.equals(this.description, that.description) && Objects.equals(this.enchantments, that.enchantments) && Objects.equals(this.flags, that.flags);
 	}
 
 	@Override

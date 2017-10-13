@@ -200,7 +200,7 @@ public final class Message implements Serializable
 			return false;
 		}
 		Message that = (Message)object;
-		return this.parts.equals(that.parts);
+		return Objects.equals(this.parts, that.parts);
 	}
 
 	@Override
@@ -304,7 +304,7 @@ public final class Message implements Serializable
 				return false;
 			}
 			MessagePart that = (MessagePart)object;
-			return this.text.equals(that.text) && this.color == that.color && this.magicFormat == that.magicFormat && this.boldFormat == that.boldFormat && this.strikethroughFormat == that.strikethroughFormat && this.underlineFormat == that.underlineFormat && this.italicFormat == that.italicFormat && this.hoverEvent.equals(that.hoverEvent) && this.clickEvent.equals(that.clickEvent);
+			return Objects.equals(this.text, that.text) && this.color == that.color && this.magicFormat == that.magicFormat && this.boldFormat == that.boldFormat && this.strikethroughFormat == that.strikethroughFormat && this.underlineFormat == that.underlineFormat && this.italicFormat == that.italicFormat && Objects.equals(this.hoverEvent, that.hoverEvent) && Objects.equals(this.clickEvent, that.clickEvent);
 		}
 
 		@Override
