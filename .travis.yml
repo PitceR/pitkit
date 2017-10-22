@@ -2,10 +2,9 @@ language: java
 jdk:
   - openjdk8
 before_install:
-  - git clone https://github.com/PaperMC/Paper ~/PitceR/Paper
-  - cd ~/PitceR/Paper
-  - ./paper jar
-  - git clone https://github.com/PitceR/shorts ~/PitceR/shorts
-  - cd ~/PitceR/shorts
-  - mvn clean install
-  - cd ~/PitceR/pitkit
+  - ./install-dependencies.sh
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+notifications:
+  email: false
