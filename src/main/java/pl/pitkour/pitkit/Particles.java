@@ -19,7 +19,6 @@ package pl.pitkour.pitkit;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
-import com.github.pitcer.shorts.Loops;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.EnumParticle;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
@@ -35,6 +34,7 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 import pl.pitkour.pitkit.utility.Builder;
 import pl.pitkour.pitkit.utility.NumberUtility;
+import pl.pitkour.shorts.Loops;
 
 public final class Particles implements Serializable
 {

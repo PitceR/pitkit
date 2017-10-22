@@ -21,7 +21,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import com.github.pitcer.shorts.throwable.Throwables;
+import pl.pitkour.shorts.throwable.Throwables;
 
 public final class NumberUtility
 {

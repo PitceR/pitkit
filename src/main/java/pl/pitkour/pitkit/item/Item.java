@@ -28,8 +28,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import com.github.pitcer.shorts.Conditions;
-import com.github.pitcer.shorts.Loops;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -49,6 +47,8 @@ import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.material.MaterialData;
 import pl.pitkour.pitkit.text.Text;
 import pl.pitkour.pitkit.utility.Builder;
+import pl.pitkour.shorts.Conditions;
+import pl.pitkour.shorts.Loops;
 
 public final class Item implements Serializable
 {
