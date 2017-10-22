@@ -51,8 +51,8 @@ public class SerializationTest
 	@Test
 	public void testMessageSerialization() throws Exception
 	{
-		long now = System.currentTimeMillis();
-		Message message = Message.builder("Foo").color(ChatColor.BLUE).bold(true).space().brackets("Bar").hover(HoverAction.SHOW_TEXT, Text.colorize("&7FooBar")).click(ClickAction.RUN_COMMAND, "/foo bar").space().text(Text.colorize("&9FooBar")).space().number(1337).line().date(now).line().time(now).build();
+		long time = 1506376800000L;
+		Message message = Message.builder("Foo").color(ChatColor.BLUE).bold(true).space().brackets("Bar").hover(HoverAction.SHOW_TEXT, Text.colorize("&7FooBar")).click(ClickAction.RUN_COMMAND, "/foo bar").space().text(Text.colorize("&9FooBar")).space().number(1337).line().date(time).line().time(time).build();
 		checkSerialization(message);
 	}
 
