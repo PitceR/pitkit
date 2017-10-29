@@ -175,16 +175,15 @@ public final class Message implements Serializable
 		connection.sendPacket(packet);
 	}
 
-	public BaseComponent[] toBaseComponents()
+	public BaseComponent[] asBaseComponents()
 	{
 		return ComponentSerializer.parse(toString());
 	}
 
-	@Override
-	public String toString()
+	public String asString()
 	{
 		JsonArray jsonArray = new JsonArray();
-		this.parts.forEach(part -> jsonArray.add(part.toJsonObject()));
+		this.parts.stream().map(MessagePart::asJsonObject).forEach(jsonArray::add);
 		return jsonArray.toString();
 	}
 
@@ -207,6 +206,12 @@ public final class Message implements Serializable
 	public int hashCode()
 	{
 		return Objects.hash(this.parts);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Message{" + "parts=" + this.parts + '}';
 	}
 
 	public List<MessagePart> getParts()
@@ -271,7 +276,7 @@ public final class Message implements Serializable
 			this.text = text;
 		}
 
-		private JsonObject toJsonObject()
+		private JsonObject asJsonObject()
 		{
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("text", this.text.toString());

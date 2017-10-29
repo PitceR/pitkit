@@ -97,17 +97,17 @@ public final class Particles implements Serializable
 	public void send(Player... receivers)
 	{
 		Objects.requireNonNull(receivers, "receivers must not be null");
-		PacketPlayOutWorldParticles packet = toPacket();
+		PacketPlayOutWorldParticles packet = asPacket();
 		Arrays.stream(receivers).forEach(receiver -> sendPacket(receiver, packet));
 	}
 
 	public void send(Player receiver)
 	{
 		Objects.requireNonNull(receiver, "receiver must not be null");
-		sendPacket(receiver, toPacket());
+		sendPacket(receiver, asPacket());
 	}
 
-	private PacketPlayOutWorldParticles toPacket()
+	private PacketPlayOutWorldParticles asPacket()
 	{
 		EnumParticle particle = CraftParticle.toNMS(this.particle);
 		return new PacketPlayOutWorldParticles(particle, true, this.x, this.y, this.z, this.offsetX, this.offsetY, this.offsetZ, this.extra, this.count, this.data);

@@ -125,13 +125,12 @@ public final class Text implements Serializable
 		receiver.sendMessage(toString());
 	}
 
-	public BaseComponent[] toBaseComponents()
+	public BaseComponent[] asBaseComponents()
 	{
 		return TextComponent.fromLegacyText(toString());
 	}
 
-	@Override
-	public String toString()
+	public String asString()
 	{
 		String text = this.text;
 		text = this.colored ? colorize(text) : text;
@@ -151,13 +150,19 @@ public final class Text implements Serializable
 			return false;
 		}
 		Text that = (Text)object;
-		return this.colored == that.colored && this.uncolored == that.uncolored && Objects.equals(this.text, that.text);
+		return Objects.equals(this.text, that.text) && this.colored == that.colored && this.uncolored == that.uncolored;
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(this.colored, this.uncolored, this.text);
+		return Objects.hash(this.text, this.colored, this.uncolored);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Text{" + "text='" + this.text + '\'' + ", colored=" + this.colored + ", uncolored=" + this.uncolored + '}';
 	}
 
 	public boolean isColored()

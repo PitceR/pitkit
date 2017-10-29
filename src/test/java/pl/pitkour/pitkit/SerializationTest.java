@@ -45,7 +45,7 @@ public class SerializationTest
 	public void testTextSerialization() throws Exception
 	{
 		Text text = Text.builder("Foo").space().regular("Bar").space().text("&9FooBar").colored().build();
-		checkSerialization(text);
+		testSerialization(text);
 	}
 
 	@Test
@@ -53,24 +53,24 @@ public class SerializationTest
 	{
 		long time = 1506376800000L;
 		Message message = Message.builder("Foo").color(ChatColor.BLUE).bold(true).space().brackets("Bar").hover(HoverAction.SHOW_TEXT, Text.colorize("&7FooBar")).click(ClickAction.RUN_COMMAND, "/foo bar").space().text(Text.colorize("&9FooBar")).space().number(1337).line().date(time).line().time(time).build();
-		checkSerialization(message);
+		testSerialization(message);
 	}
 
 	@Test
 	public void testItemSerialization() throws Exception
 	{
 		Item item = Item.builder(Material.DIAMOND).woolColor(DyeColor.BLUE).amount(32).unbreakable().glow().name(Text.builder("&9FooBar").colored().build()).description(Text.of("Foo"), Text.builder().color(ChatColor.GRAY).text("Bar").build(), Text.empty()).enchantment(Enchantment.SILK_TOUCH, 1).enchantment(Enchantment.MENDING, 111).flag(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES).spawnEgg(EntityType.GIANT).metadata(metadata -> metadata.setUnbreakable(false)).build();
-		checkSerialization(item);
+		testSerialization(item);
 	}
 
 	@Test
 	public void testParticlesSerialization() throws Exception
 	{
 		Particles particles = Particles.builder(Particle.PORTAL).location(1.0, 0.5, 0).offset(0.2, 0.3, 0.4).extra(1).visibilityDistance(64).data(new ItemStack(Material.EMERALD)).build();
-		checkSerialization(particles);
+		testSerialization(particles);
 	}
 
-	private static <T extends Serializable> void checkSerialization(T object)
+	private static <T extends Serializable> void testSerialization(T object)
 	{
 		File file = new File("src/test/resources/" + object.getClass().getSimpleName() + ".ser");
 		try(FileOutputStream fileOutputStream = new FileOutputStream(file); ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream); FileInputStream fileInputStream = new FileInputStream(file); ObjectInputStream inputStream = new ObjectInputStream(fileInputStream))

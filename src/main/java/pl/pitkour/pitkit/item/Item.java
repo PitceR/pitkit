@@ -181,7 +181,7 @@ public final class Item implements Serializable
 	}
 
 	@SuppressWarnings("deprecation")
-	public ItemStack toItemStack()
+	public ItemStack asItemStack()
 	{
 		ItemStack item = new ItemStack(this.id, this.amount, this.damage, this.data);
 		ItemMeta metadata = item.getItemMeta();
