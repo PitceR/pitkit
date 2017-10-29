@@ -32,15 +32,15 @@ public enum HoverAction
 		switch(action)
 		{
 			case SHOW_TEXT:
-				return HoverAction.SHOW_TEXT;
+				return SHOW_TEXT;
 			case SHOW_ITEM:
-				return HoverAction.SHOW_ITEM;
+				return SHOW_ITEM;
 			case SHOW_ENTITY:
-				return HoverAction.SHOW_ENTITY;
+				return SHOW_ENTITY;
 			case SHOW_ACHIEVEMENT:
-				return HoverAction.SHOW_ACHIEVEMENT;
+				return SHOW_ACHIEVEMENT;
 			default:
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("missing hover action type");
 		}
 	}
 

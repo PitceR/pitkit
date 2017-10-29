@@ -86,7 +86,7 @@ public final class Particles implements Serializable
 	public static ParticlesBuilder builder(Particles particles)
 	{
 		Objects.requireNonNull(particles, "particles must not be null");
-		return new ParticlesBuilder(Particles.of(particles));
+		return new ParticlesBuilder(new Particles(particles));
 	}
 
 	public static ParticlesBuilder builder(Particle particle)
@@ -269,7 +269,7 @@ public final class Particles implements Serializable
 
 		public ParticlesBuilder color(int red, int green, int blue)
 		{
-			return offset(red / 255D, green / 255D, blue / 255D);
+			return offset(red / 255.0, green / 255.0, blue / 255.0);
 		}
 
 		public ParticlesBuilder offset(double offsetX, double offsetY, double offsetZ)

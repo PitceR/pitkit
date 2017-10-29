@@ -33,17 +33,17 @@ public enum ClickAction
 		switch(action)
 		{
 			case RUN_COMMAND:
-				return ClickAction.RUN_COMMAND;
+				return RUN_COMMAND;
 			case SUGGEST_COMMAND:
-				return ClickAction.SUGGEST_COMMAND;
+				return SUGGEST_COMMAND;
 			case OPEN_FILE:
-				return ClickAction.OPEM_FILE;
+				return OPEM_FILE;
 			case OPEN_URL:
-				return ClickAction.OPEN_URL;
+				return OPEN_URL;
 			case CHANGE_PAGE:
-				return ClickAction.CHANGE_PAGE;
+				return CHANGE_PAGE;
 			default:
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("missing click action type");
 		}
 	}
 

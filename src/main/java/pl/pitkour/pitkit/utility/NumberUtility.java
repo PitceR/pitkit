@@ -83,11 +83,10 @@ public final class NumberUtility
 		return Double.doubleToLongBits(double1) == Double.doubleToLongBits(double2);
 	}
 
-	public static boolean chance(double percent)
+	public static boolean hasChance(double percent)
 	{
 		int randomInteger = random(100_000);
-		percent *= 1_000D;
-		return randomInteger <= percent;
+		return randomInteger <= percent * 1_000.0;
 	}
 
 	public static int random(int high)

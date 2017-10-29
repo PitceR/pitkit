@@ -214,7 +214,7 @@ public final class Message implements Serializable
 		return Collections.unmodifiableList(this.parts);
 	}
 
-	public final static class MessagePart implements Serializable
+	public static final class MessagePart implements Serializable
 	{
 		private static final long serialVersionUID = 5790324967422029011L;
 		private Text text;
@@ -365,7 +365,7 @@ public final class Message implements Serializable
 		}
 	}
 
-	public final static class MessageBuilder implements Builder<Message>
+	public static final class MessageBuilder implements Builder<Message>
 	{
 		private Message message;
 

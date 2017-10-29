@@ -451,8 +451,8 @@ public final class Item implements Serializable
 				{
 					throw new IllegalStateException("item metadata must be a FireworkEffectMeta");
 				}
-				FireworkEffectMeta fireworkEffectMetadata = (FireworkEffectMeta)metadata;
-				fireworkEffectMetadata.setEffect(effect);
+				FireworkEffectMeta effectMetadata = (FireworkEffectMeta)metadata;
+				effectMetadata.setEffect(effect);
 			});
 		}
 
