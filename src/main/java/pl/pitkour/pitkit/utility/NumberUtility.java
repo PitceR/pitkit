@@ -21,7 +21,6 @@ import java.text.DecimalFormatSymbols;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import pl.pitkour.shorts.throwable.Throwables;
 
 public final class NumberUtility
 {
@@ -33,34 +32,82 @@ public final class NumberUtility
 		throw new UnsupportedOperationException("cannot create instance of utility class");
 	}
 
-	public static Optional<Byte> parseByte(String string)
+	public static Optional<Byte> parseByte(String numberString)
 	{
-		return Throwables.tryCatch(() -> Byte.parseByte(string));
+		try
+		{
+			byte parsed = Byte.parseByte(numberString);
+			return Optional.of(parsed);
+		}
+		catch(NumberFormatException ignored)
+		{
+			return Optional.empty();
+		}
 	}
 
-	public static Optional<Short> parseShort(String string)
+	public static Optional<Short> parseShort(String numberString)
 	{
-		return Throwables.tryCatch(() -> Short.parseShort(string));
+		try
+		{
+			short parsed = Short.parseShort(numberString);
+			return Optional.of(parsed);
+		}
+		catch(NumberFormatException ignored)
+		{
+			return Optional.empty();
+		}
 	}
 
-	public static Optional<Integer> parseInteger(String string)
+	public static Optional<Integer> parseInteger(String numberString)
 	{
-		return Throwables.tryCatch(() -> Integer.parseInt(string));
+		try
+		{
+			int parsed = Integer.parseInt(numberString);
+			return Optional.of(parsed);
+		}
+		catch(NumberFormatException ignored)
+		{
+			return Optional.empty();
+		}
 	}
 
-	public static Optional<Long> parseLong(String string)
+	public static Optional<Long> parseLong(String numberString)
 	{
-		return Throwables.tryCatch(() -> Long.parseLong(string));
+		try
+		{
+			long parsed = Long.parseLong(numberString);
+			return Optional.of(parsed);
+		}
+		catch(NumberFormatException ignored)
+		{
+			return Optional.empty();
+		}
 	}
 
-	public static Optional<Float> parseFloat(String string)
+	public static Optional<Float> parseFloat(String numberString)
 	{
-		return Throwables.tryCatch(() -> Float.parseFloat(string));
+		try
+		{
+			float parsed = Float.parseFloat(numberString);
+			return Optional.of(parsed);
+		}
+		catch(NumberFormatException ignored)
+		{
+			return Optional.empty();
+		}
 	}
 
-	public static Optional<Double> parseDouble(String string)
+	public static Optional<Double> parseDouble(String numberString)
 	{
-		return Throwables.tryCatch(() -> Double.parseDouble(string));
+		try
+		{
+			double parsed = Double.parseDouble(numberString);
+			return Optional.of(parsed);
+		}
+		catch(NumberFormatException ignored)
+		{
+			return Optional.empty();
+		}
 	}
 
 	public static String separateThousands(long number)

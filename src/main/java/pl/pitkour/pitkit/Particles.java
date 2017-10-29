@@ -34,7 +34,6 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 import pl.pitkour.pitkit.utility.Builder;
 import pl.pitkour.pitkit.utility.NumberUtility;
-import pl.pitkour.shorts.Loops;
 
 public final class Particles implements Serializable
 {
@@ -99,7 +98,7 @@ public final class Particles implements Serializable
 	{
 		Objects.requireNonNull(receivers, "receivers must not be null");
 		PacketPlayOutWorldParticles packet = toPacket();
-		Loops.forEach(receivers, receiver -> sendPacket(receiver, packet));
+		Arrays.stream(receivers).forEach(receiver -> sendPacket(receiver, packet));
 	}
 
 	public void send(Player receiver)

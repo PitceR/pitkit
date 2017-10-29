@@ -18,9 +18,11 @@ package pl.pitkour.pitkit.text.message;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -42,8 +44,6 @@ import pl.pitkour.pitkit.text.message.event.action.HoverAction;
 import pl.pitkour.pitkit.utility.Builder;
 import pl.pitkour.pitkit.utility.NumberUtility;
 import pl.pitkour.pitkit.utility.TimeUtility;
-import pl.pitkour.shorts.Conditions;
-import pl.pitkour.shorts.Loops;
 import static pl.pitkour.pitkit.text.Text.ERROR_COLOR;
 import static pl.pitkour.pitkit.text.Text.ERROR_HIGHLIGHTED_COLOR;
 import static pl.pitkour.pitkit.text.Text.HIGHLIGHTED_COLOR;
@@ -64,13 +64,13 @@ public final class Message implements Serializable
 
 	private Message(Message message)
 	{
-		this.parts = Loops.transform(message.parts, MessagePart::new);
+		this.parts = message.parts.stream().map(MessagePart::new).collect(Collectors.toList());
 		this.currentPart = message.currentPart;
 	}
 
 	private Message(BaseComponent[] baseComponents)
 	{
-		Loops.forEach(baseComponents, baseComponent -> addPart(new MessagePart(baseComponent)));
+		Arrays.stream(baseComponents).map(MessagePart::new).forEach(this::addPart);
 	}
 
 	private Message(String text)
@@ -236,8 +236,14 @@ public final class Message implements Serializable
 			this.strikethroughFormat = part.strikethroughFormat;
 			this.underlineFormat = part.underlineFormat;
 			this.italicFormat = part.italicFormat;
-			Conditions.ifThen(part.hoverEvent != null, () -> this.hoverEvent = new HoverEvent(part.hoverEvent));
-			Conditions.ifThen(part.clickEvent != null, () -> this.clickEvent = new ClickEvent(part.clickEvent));
+			if(part.hoverEvent != null)
+			{
+				this.hoverEvent = new HoverEvent(part.hoverEvent);
+			}
+			if(part.clickEvent != null)
+			{
+				this.clickEvent = new ClickEvent(part.clickEvent);
+			}
 		}
 
 		private MessagePart(BaseComponent baseComponent)
@@ -269,12 +275,30 @@ public final class Message implements Serializable
 		{
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("text", this.text.toString());
-			Conditions.ifThen(this.color != null, () -> jsonObject.addProperty("color", this.color.name().toLowerCase()));
-			Conditions.ifThen(this.magicFormat, () -> jsonObject.addProperty("magic", true));
-			Conditions.ifThen(this.boldFormat, () -> jsonObject.addProperty("bold", true));
-			Conditions.ifThen(this.strikethroughFormat, () -> jsonObject.addProperty("strikethrough", true));
-			Conditions.ifThen(this.underlineFormat, () -> jsonObject.addProperty("underline", true));
-			Conditions.ifThen(this.italicFormat, () -> jsonObject.addProperty("italic", true));
+			if(this.color != null)
+			{
+				jsonObject.addProperty("color", this.color.name().toLowerCase());
+			}
+			if(this.magicFormat)
+			{
+				jsonObject.addProperty("magic", true);
+			}
+			if(this.boldFormat)
+			{
+				jsonObject.addProperty("bold", true);
+			}
+			if(this.strikethroughFormat)
+			{
+				jsonObject.addProperty("strikethrough", true);
+			}
+			if(this.underlineFormat)
+			{
+				jsonObject.addProperty("underline", true);
+			}
+			if(this.italicFormat)
+			{
+				jsonObject.addProperty("italic", true);
+			}
 			if(this.hoverEvent != null)
 			{
 				JsonObject jsonHoverEvent = new JsonObject();

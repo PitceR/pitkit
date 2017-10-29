@@ -18,6 +18,7 @@ package pl.pitkour.pitkit.item;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -47,8 +48,6 @@ import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.material.MaterialData;
 import pl.pitkour.pitkit.text.Text;
 import pl.pitkour.pitkit.utility.Builder;
-import pl.pitkour.shorts.Conditions;
-import pl.pitkour.shorts.Loops;
 
 public final class Item implements Serializable
 {
@@ -77,7 +76,7 @@ public final class Item implements Serializable
 		this.unbreakable = item.unbreakable;
 		this.glow = item.glow;
 		this.name = Text.of(item.name);
-		this.description = Loops.transform(item.description, Text::of);
+		this.description = item.description.stream().map(Text::of).collect(Collectors.toList());
 		this.enchantments = new HashMap<>(item.enchantments);
 		this.flags = EnumSet.copyOf(item.flags);
 		this.metadataAppliers = new ArrayList<>(item.metadataAppliers);
@@ -94,9 +93,18 @@ public final class Item implements Serializable
 		{
 			ItemMeta metadata = itemStack.getItemMeta();
 			this.unbreakable = metadata.isUnbreakable();
-			Conditions.ifThen(metadata.hasItemFlag(ItemFlag.HIDE_ENCHANTS) && metadata.hasEnchant(Enchantment.LUCK), () -> this.glow = true);
-			Conditions.ifThen(metadata.hasDisplayName(), () -> this.name = Text.of(metadata.getDisplayName()));
-			Conditions.ifThen(metadata.hasLore(), () -> this.description = Loops.transform(metadata.getLore(), Text::of));
+			if(metadata.hasItemFlag(ItemFlag.HIDE_ENCHANTS) && metadata.hasEnchant(Enchantment.LUCK))
+			{
+				this.glow = true;
+			}
+			if(metadata.hasDisplayName())
+			{
+				this.name = Text.of(metadata.getDisplayName());
+			}
+			if(metadata.hasLore())
+			{
+				this.description = metadata.getLore().stream().map(Text::of).collect(Collectors.toList());
+			}
 			if(metadata.hasEnchants())
 			{
 				this.enchantments = metadata.getEnchants().entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().getId(), Entry::getValue));
@@ -185,7 +193,7 @@ public final class Item implements Serializable
 			metadata.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		}
 		metadata.setDisplayName(this.name.toString());
-		metadata.setLore(Loops.transform(this.description, Text::toString));
+		metadata.setLore(this.description.stream().map(Text::toString).collect(Collectors.toList()));
 		this.enchantments.forEach((enchantment, level) -> metadata.addEnchant(Enchantment.getById(enchantment), level, true));
 		this.flags.forEach(metadata::addItemFlags);
 		item.setItemMeta(metadata);
@@ -363,7 +371,7 @@ public final class Item implements Serializable
 		public ItemBuilder description(Text... lines)
 		{
 			Objects.requireNonNull(lines, "lines must not be null");
-			Loops.forEach(lines, this::description);
+			Arrays.stream(lines).forEach(this::description);
 			return this;
 		}
 
@@ -385,7 +393,7 @@ public final class Item implements Serializable
 		public ItemBuilder flag(ItemFlag... flags)
 		{
 			Objects.requireNonNull(flags, "flags must not be null");
-			Loops.forEach(flags, this::flag);
+			Arrays.stream(flags).forEach(this::flag);
 			return this;
 		}
 
@@ -424,7 +432,7 @@ public final class Item implements Serializable
 				}
 				BannerMeta bannerMetadata = (BannerMeta)metadata;
 				bannerMetadata.setBaseColor(baseColor);
-				Loops.forEach(patterns, bannerMetadata::addPattern);
+				Arrays.stream(patterns).forEach(bannerMetadata::addPattern);
 			});
 		}
 
