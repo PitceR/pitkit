@@ -35,18 +35,18 @@ public final class Text implements Serializable
 	public static final ChatColor PREFIX_COLOR = ChatColor.DARK_GRAY;
 	public static final Text PREFIX = builder().color(PREFIX_COLOR).text("> ").build();
 	private static final long serialVersionUID = -1827542141277789793L;
-	private StringBuilder text;
+	private String text;
 	private boolean colored;
 	private boolean uncolored;
 
 	private Text()
 	{
-		this.text = new StringBuilder();
+		this.text = "";
 	}
 
 	private Text(Text text)
 	{
-		this.text = new StringBuilder(text.text);
+		this.text = text.text;
 		this.colored = text.colored;
 		this.uncolored = text.uncolored;
 	}
@@ -58,7 +58,7 @@ public final class Text implements Serializable
 
 	private Text(String text)
 	{
-		this.text = new StringBuilder(text);
+		this.text = text;
 	}
 
 	public static Text empty()
@@ -133,7 +133,7 @@ public final class Text implements Serializable
 	@Override
 	public String toString()
 	{
-		String text = this.text.toString();
+		String text = this.text;
 		text = this.colored ? colorize(text) : text;
 		text = this.uncolored ? uncolorize(text) : text;
 		return text;
@@ -151,7 +151,7 @@ public final class Text implements Serializable
 			return false;
 		}
 		Text that = (Text)object;
-		return this.colored == that.colored && this.uncolored == that.uncolored && Objects.equals(this.text.toString(), that.text.toString());
+		return this.colored == that.colored && this.uncolored == that.uncolored && Objects.equals(this.text, that.text);
 	}
 
 	@Override
@@ -173,10 +173,12 @@ public final class Text implements Serializable
 	public static final class TextBuilder implements Builder<Text>
 	{
 		private Text text;
+		private StringBuilder textBuilder;
 
 		private TextBuilder(Text text)
 		{
 			this.text = text;
+			this.textBuilder = new StringBuilder(text.text);
 		}
 
 		public TextBuilder date(long millis)
@@ -299,7 +301,7 @@ public final class Text implements Serializable
 		public TextBuilder text(String text)
 		{
 			Objects.requireNonNull(text, "text must not be null");
-			this.text.text.append(text);
+			this.textBuilder.append(text);
 			return this;
 		}
 
@@ -330,6 +332,7 @@ public final class Text implements Serializable
 		@Override
 		public Text build()
 		{
+			this.text.text = this.textBuilder.toString();
 			return this.text;
 		}
 	}
